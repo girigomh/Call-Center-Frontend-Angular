@@ -1,0 +1,358 @@
+<div class="w-full max-w-3xl">
+
+    <!-- Form -->
+    <form [formGroup]="accountForm" (ngSubmit)="onFormSubmit()">
+
+        <!-- Section -->
+        <div class="w-full">
+            <div class="text-xl">Profile</div>
+            <div class="text-secondary">Die folgenden Informationen werden öffentlich angezeigt, sei vorsichtig!</div>
+        </div>
+
+        <div class="my-6 border-t"></div>
+        <div class="w-full text-xl mt-8">Privatsphäre-Check/ Datenschutz-Center</div>
+
+        <div class="flex items-center justify-between py-3">
+            <div class="flex-auto cursor-pointer">
+                <div class="leading-6 font-medium">Erstellen Sie Ihr Profil</div>
+                <div class="text-md text-secondary">
+                    Jeder kann Ihr Profil sehen, wenn es öffentlich ist
+                </div>
+            </div>
+            <span>Privat</span>
+            <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'profileVisibality'"
+                #profileVisibalityToggle>
+            </mat-slide-toggle>
+            <span>Öffentlich</span>
+        </div>
+
+        <div class="w-full mt-5 font-medium">Statussichtbarkeit:</div>
+        <div>Wer darf meinen Status sehen?</div>
+        <div class="flex items-center justify-between">
+
+            <select class=" bg-gray-200 py-2 rounded-lg" [formControlName]="'comments'">
+                <option value="all">Alle</option>
+                <option value="verified">Oder nur die verifizierten</option>
+                <option value="verified">Nur die registrierten</option>
+            </select>
+        </div>
+
+        <div *ngIf="userType === 'COMPANYLEADER' ||'ADMIN'">
+            <div class="w-full mt-5 font-medium">Profilsichtbarkeit:</div>
+            <div>Wer darf mein Profil sehen?</div>
+            <div class="flex items-center justify-between">
+
+                <select class=" bg-gray-200 py-2 rounded-lg" [formControlName]="'verification'">
+                    <option value="all">Alle</option>
+                    <option value="verified">Oder nur die verifizierten</option>
+                    <option value="verified">Nur die registrierten</option>
+                </select>
+            </div>
+        </div>
+
+
+        <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+
+            <!-- Username -->
+            <div class="sm:col-span-4">
+                <mat-form-field class="fuse-mat-emphasized-affix w-full">
+                    <mat-label>Benutzername</mat-label>
+                    <div class="text-secondary" matPrefix>
+                        comcom.at/
+                    </div>
+                    <input [formControlName]="'username'" matInput>
+                </mat-form-field>
+            </div>
+            <!-- Company -->
+            <!-- <div class="sm:col-span-4">
+                <mat-form-field class="w-full">
+                    <mat-label>Unternehmen</mat-label>
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:office-building'" matPrefix></mat-icon>
+                    <input type="text" [formControlName]="'company'" matInput>
+                </mat-form-field>
+            </div> -->
+
+            <!-- Name -->
+            <!-- <div class="sm:col-span-4">
+                <mat-form-field class="w-full">
+                    <mat-label>Name</mat-label>
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
+                    <input type="text" [formControlName]="'name'" matInput>
+                </mat-form-field>
+            </div> -->
+
+            <!-- Title -->
+            <!-- <div class="sm:col-span-4">
+                <mat-form-field class="w-full">
+                    <mat-label>Beruf</mat-label>
+                    <mat-icon class="icon-size-5" matPrefix>computer</mat-icon>
+                    <input type="text" [formControlName]="'title'" matInput>
+                </mat-form-field>
+            </div> -->
+        </div>
+        <!-- Divider -->
+        <div class="my-10 border-t"></div>
+
+        <div class="w-full text-xl mt-3">Spracheinstellungen</div>
+        <div class="w-full mt-8 font-medium">Sprache:</div>
+        <div class="grid grid-cols-1 gap-4 w-full mt-4">
+            <!-- Language Option -->
+            <div class="flex items-center justify-between">
+                <div class="flex-auto leading-6 cursor-pointer">
+                    Deutsch – Deutschland
+                </div>
+                <mat-slide-toggle class="ml-2" name="comments">
+                </mat-slide-toggle>
+            </div>
+            <div class="flex items-center justify-between">
+                <div class="flex-auto leading-6 cursor-pointer">
+                    Deutsch – Österreich
+                </div>
+                <mat-slide-toggle class="ml-2" name="comments">
+                </mat-slide-toggle>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <div class="flex-auto leading-6 cursor-pointer">
+                    Deutsch – Schweiz
+                </div>
+                <mat-slide-toggle class="ml-2" name="comments">
+                </mat-slide-toggle>
+            </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="my-6 border-t"></div>
+        <div class="w-full text-xl mt-8">Datenzugriff:</div>
+        <div *ngIf="userType === 'COMPANYLEADER' ||'ADMIN'">
+            <div>Wer darf auf meine persönlichen Daten zugreifen?</div>
+            <div class="leading-6 font-medium">Datencheck:</div>
+            <div class="flex items-center justify-between">
+                <div class="flex-auto leading-6 cursor-pointer py-2" (click)="comments.toggle()">
+                    - Datenweitergabe: Meine persönlichen Daten können an die Vermittlungszentrale oder den Admin
+                    weitergegeben werden, wenn
+                    ich dies gestatte.
+                </div>
+                <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'comments'" #comments>
+                </mat-slide-toggle>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <div class="flex-auto leading-6 cursor-pointer py-2" (click)="comments.toggle()">
+                    <div class="leading-6 font-medium">Datenweitergabe:</div>
+                    Meine persönlichen Daten können an die Vermittlungszentrale oder den Admin
+                    weitergegeben werden, wenn
+                    ich dies gestatte.
+                </div>
+                <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'comments'" #comments>
+                </mat-slide-toggle>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <div class="flex-auto leading-6 cursor-pointer py-2" (click)="comments.toggle()">
+                    <div class="leading-6 font-medium">Datenlöschung:</div>
+                    Ich kann die Löschung meiner persönlichen Daten beantragen, wenn ich die Plattform
+                    verlasse oder meine
+                    Dienste nicht mehr benötige. Komplett gelöscht wird es erst in 8 Jahren nach dem Austritt wegen
+                    Aufbewahrungspflicht.
+                </div>
+                <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'comments'" #comments>
+                </mat-slide-toggle>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <div class="flex-auto leading-6 cursor-pointer py-2" (click)="comments.toggle()">
+                    <div class="leading-6 font-medium">Zustimmung zur Überprüfung:</div>
+                    Ich kann meine Zustimmung oder Ablehnung zur Überprüfung meiner
+                    persönlichen Daten durch die
+                    Vermittlungszentrale oder den Admin geben. Du wirst nicht verifiziert.
+                </div>
+                <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'comments'" #comments>
+                </mat-slide-toggle>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 w-full mt-4">
+
+            <!-- Divider -->
+            <div class="my-6 border-t"></div>
+
+            <div class="w-full text-xl mt-5">Termine</div>
+            <div *ngIf="userType === 'COMPANYLEADER' ||'ADMIN'">
+                <div class="flex items-center justify-between">
+                    <div class="flex-auto leading-6 cursor-pointer py-2" (click)="comments.toggle()">
+                        <div class="leading-6 font-medium py-1">Terminvorschläge empfangen:</div>
+                        Ich möchte von anderen Benutzern Termine empfangen.
+                    </div>
+                    <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'comments'" #comments>
+                    </mat-slide-toggle>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="flex-auto leading-6 cursor-pointer py-2" (click)="comments.toggle()">
+                        <div class="leading-6 font-medium py-1">Verfügbarkeit:</div>
+                        Ich kann meine Verfügbarkeit angeben, um sicherzustellen, dass Terminvorschläge nur
+                        zu Zeiten gesendet
+                        werden, an denen ich verfügbar bin.
+                    </div>
+                    <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'comments'" #comments>
+                    </mat-slide-toggle>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="flex-auto leading-6 cursor-pointer py-2" (click)="comments.toggle()">
+                        <div class="leading-6 font-medium py-1">Dauer der Termine:</div>
+                        Ich kann die minimale und maximale Dauer für Termine angeben, um
+                        sicherzustellen, dass die
+                        vorgeschlagenen Termine meinen Bedürfnissen entsprechen.
+                    </div>
+                    <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'comments'" #comments>
+                    </mat-slide-toggle>
+                </div>
+            </div>
+            <div class="my-6 border-t"></div>
+
+            <!-- Mention -->
+            <div class="flex items-center justify-between">
+                <div class="flex-auto leading-6 cursor-pointer" (click)="mention.toggle()">
+                    Öffentlich/Nicht öffentlich
+                </div>
+                <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'mention'" #mention>
+                </mat-slide-toggle>
+            </div>
+            <!-- Follow -->
+            <div class="flex items-center justify-between">
+                <div class="flex-auto leading-6 cursor-pointer" (click)="follow.toggle()">
+                    Wer kann mich direkt kontaktieren/anrufen
+                </div>
+                <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'follow'" #follow>
+                </mat-slide-toggle>
+            </div>
+            <!-- Inquiry -->
+            <div class="flex items-center justify-between">
+                <div class="flex-auto leading-6 cursor-pointer" (click)="inquiry.toggle()">
+                    Kann die Vermittlungsstelle und/oder der Administrator meine Daten überprüfen? Wenn nicht, werden
+                    Sie nicht verifiziert
+                </div>
+                <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'inquiry'" #inquiry>
+                </mat-slide-toggle>
+            </div>
+
+            <!-- Inquiry -->
+            <div class="flex items-center justify-between">
+                <div class="flex-auto leading-6 cursor-pointer" (click)="inquiry.toggle()">
+                    Wer kann meine Verfügbarkeit sehen?
+                </div>
+                <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'inquiry'" #inquiry>
+                </mat-slide-toggle>
+            </div>
+            <!-- Inquiry -->
+            <div class="flex items-center justify-between">
+                <div class="flex-auto leading-6 cursor-pointer" (click)="inquiry.toggle()">
+                    Kann Anonym dich anrufen?
+                </div>
+                <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'inquiry'" #inquiry>
+                </mat-slide-toggle>
+            </div>
+
+            <!-- Inquiry -->
+            <div class="flex items-center justify-between">
+                <div class="flex-auto leading-6 cursor-pointer" (click)="inquiry.toggle()">
+                    Kann ich einen Terminvorschlag senden?
+                </div>
+                <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'inquiry'" #inquiry>
+                </mat-slide-toggle>
+            </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="my-10 border-t"></div>
+        <!-- Actions -->
+        <div class="flex items-center justify-end">
+            <button mat-stroked-button type="button">
+                Abbrechen
+            </button>
+            <button class="ml-4" mat-flat-button type="submit" color="'primary'">Speichern
+            </button>
+        </div>
+
+        <!-- Section -->
+        <!-- <div class="w-full">
+            <div class="text-xl">Persönliche Angaben</div>
+            <div class="text-secondary">Kommunikationsdetails, falls wir uns mit dir in Verbindung setzen möchten.
+                Diese werden privat gehalten.</div>
+        </div> -->
+        <!-- <div class="grid sm:grid-cols-4 gap-6 w-full mt-8"> -->
+        <!-- Email -->
+        <!-- <div class="sm:col-span-2">
+                <mat-form-field class="w-full">
+                    <mat-label>Email</mat-label>
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:mail'" matPrefix></mat-icon>
+                    <input [formControlName]="'email'" matInput>
+                </mat-form-field>
+            </div> -->
+        <!-- Phone -->
+        <!-- <div class="sm:col-span-2">
+                <mat-form-field class="w-full">
+                    <mat-label>Telefon</mat-label>
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:phone'" matPrefix></mat-icon>
+                    <input [formControlName]="'phone'" matInput>
+                </mat-form-field>
+            </div> -->
+        <!-- Country -->
+        <!-- <div class="sm:col-span-2">
+                <mat-form-field class="w-full">
+                    <mat-label>Land</mat-label>
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:location-marker'" matPrefix></mat-icon>
+                    <mat-select [formControlName]="'country'">
+                        <mat-option [value]="'austria'">Österreich</mat-option>
+                        <mat-option [value]="'germany'">Deutschland</mat-option>
+                        <mat-option [value]="'switzerland'">Schweiz</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div> -->
+        <!-- Language -->
+        <!-- <div class="sm:col-span-2">
+                <mat-form-field class="w-full">
+                    <mat-label>Sprache</mat-label>
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:globe-alt'" matPrefix></mat-icon>
+                    <mat-select [formControlName]="'language'">
+                        <mat-option [value]="'ÖGS'">Österreichische Gebärdensprache</mat-option>
+                        <mat-option [value]="'DGS'">Deutsche Gebärdensprache</mat-option>
+                        <mat-option [value]="'DSGS'">Deutschschweizer Gebärdensprache</mat-option>
+                        <mat-option [value]="'german'">Deutsch</mat-option>
+                        <mat-option [value]="'english'">Englisch</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div> -->
+        <!-- </div> -->
+
+        <!-- Divider -->
+        <!-- <div class="mt-11 mb-10 border-t"></div> -->
+
+        <!-- Actions -->
+        <!-- <div class="flex items-center justify-end">
+            <button mat-stroked-button type="button">
+                Abbrechen
+            </button>
+            <button class="ml-4" mat-flat-button type="button" [color]="'primary'">Speichern
+            </button>
+        </div> -->
+    </form>
+
+    <!-- <div class="flex mt-4 bg-teal-50 p-4" *ngIf="userProfileData">
+        <div class="w-full">
+            <p><strong>Name:</strong> {{ accountForm.get('name').value }}</p>
+            <p><strong>Username:</strong> {{ accountForm.get('username').value }}</p>
+            <p><strong>Title:</strong> {{ accountForm.get('title').value }}</p>
+            <p class="w-72"><strong>About:</strong> {{ accountForm.get('about').value }}</p>
+        </div>
+        <div class="w-full">
+            <p><strong>Phone no:</strong> {{ accountForm.get('phone').value }}</p>
+            <p><strong>Email:</strong> {{ accountForm.get('email').value }}</p>
+            <p><strong>Company:</strong> {{ accountForm.get('company').value }}</p>
+            <p><strong>Country:</strong> {{ accountForm.get('country').value }}</p>
+            <p><strong>Language:</strong> {{ accountForm.get('language').value }}</p>
+        </div>
+
+    </div> -->
+
+</div>

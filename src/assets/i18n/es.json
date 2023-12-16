@@ -1,0 +1,13 @@
+{
+    "userType": "Test",
+    "Files": "Files",
+	  "Calls": "Calls",
+	  "Notification": "Notifications",
+	  "Calendar": "Calendar",
+	  "Promotional Video": "Promotional Video",
+	  "User": "User",
+	  "Logout": "Logout",
+    "ADMIN": "Admin",
+    "Guten Tag": "Hello",
+    "CAPTIONER": "Captioner"
+}

@@ -1,0 +1,701 @@
+<div class="w-full px-8">
+    <div class="grid grid-cols-1 flex-wrap gap-x-5">
+        <div class="flex flex-auto w-full">
+            <mat-form-field class="w-50 flex-auto">
+                <mat-label>Kontakt hinzufügen als</mat-label>
+                <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                    [svgIcon]="'heroicons_solid:briefcase'"></mat-icon>
+                <mat-select [formControl]="userTypeControl" placeholder="Select role"
+                    (selectionChange)="onUserTypeSelectionChange()">
+                    <mat-option [value]="null">
+                        No Selection
+                    </mat-option>
+                    <mat-option *ngFor="let userType of types" [value]="userType.name">
+                        {{ userType.label| titlecase }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="userTypeControl.hasError('required')">
+                    Benutzertyp erforderlich
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    <!-- <mat-stepper #stepper class=""> -->
+    <!-- <mat-horizontal-stepper #stepper>
+        <mat-step *ngFor="let step of steps">
+            <ng-template matStepLabel>{{step.label}}</ng-template>
+            <ng-container *ngTemplateOutlet="step.content"></ng-container>
+        </mat-step>
+    </mat-horizontal-stepper> -->
+    <!-- </mat-stepper> -->
+    <fuse-alert class="mt-8 -mb-4" *ngIf="showAlert" [appearance]="'outline'" [showIcon]="false"
+    [type]="'error'" [@shake]="true">
+    {{alert.message}}
+</fuse-alert>
+    <div *ngFor="let step of steps">
+        <ng-template matStepLabel>{{step.label}}</ng-template>
+        <ng-container *ngTemplateOutlet="step.content"></ng-container>
+    </div>
+
+    <button (click)="addContact()" *ngIf="userTypeControl.value"
+        class="bg-transparent border border-sky-600 hover:bg-sky-600 text-sky-600 hover:text-white font-bold py-2 px-4 rounded-full transition-all">
+        Add
+    </button>
+</div>
+<!-- <mat-step>
+            <div class="w-20 mb-5 mx-auto rounded-full overflow-hidden">
+                <a href="javascript:void(0)" (click)="profileImg.click()">
+                    <img [src]="defImg" alt="" />
+                </a>
+                <input type="file" class="hidden" #profileImg />
+            </div>
+
+            <div class="flex mx-auto w-full justify-evenly text-xl font-bold">
+                <button (click)="openCompanyDetailForm()" class="text-slate-500"><mat-icon
+                        class="pt-4 px-2">work</mat-icon>Company</button>
+                <button (click)="openUserDetailForm()" class="text-slate-500"><mat-icon
+                        class="pt-4 px-2">person_add</mat-icon>User</button>
+            </div>
+        </mat-step> -->
+<ng-template #companyLeaderDetailFormTemplate>
+    <h1 class="mt-1">Create Your Company Leader</h1>
+    <div class="w-20 mb-5 mx-auto rounded-full overflow-hidden">
+        <a href="javascript:void(0)" (click)="profileImg.click()">
+            <img [src]="defImg" alt="" />
+        </a>
+        <input type="file" class="hidden" #profileImg />
+    </div>
+    <form [formGroup]="companyLeaderDetailForm">
+        <div class="grid grid-cols-2 flex-wrap gap-x-5">
+
+            <div class="flex flex-auto w-full">
+                <div appearance="fill" class="w-full">
+                    <label>Company name:</label>
+                    <h2 *ngIf="companyLeaderDetailForm.get('company') && companyLeaderDetailForm.get('company').value">
+                        {{companyLeaderDetailForm.get('company').value.name}}
+                    </h2>
+                </div>
+            </div>
+
+
+
+        </div>
+        <div class="grid grid-cols-2 flex-wrap gap-x-5">
+
+            <div class="flex flex-auto w-full">
+                <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Call link</mat-label>
+                    <input matInput type="url" placeholder="url" formControlName="companyLeaderLinkForVideoCall"
+                        required />
+                    <mat-error
+                        *ngIf="companyLeaderDetailForm.get('companyLeaderLinkForVideoCall').hasError('required')">
+                        Url is erforderlich
+                    </mat-error>
+                    <mat-error
+                        *ngIf="companyLeaderDetailForm.get('companyLeaderLinkForVideoCall').hasError('companyLeaderLinkForVideoCall')">
+                        Bitte geben Sie eine gültige Call Url ein
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+
+            <div class="flex flex-auto w-full">
+                <mat-form-field class="w-50 flex-auto">
+                    <mat-label>Kontakt hinzufügen als</mat-label>
+                    <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                        [svgIcon]="'heroicons_solid:briefcase'"></mat-icon>
+                    <mat-select formControlName="companyId" placeholder="Select company"
+                        (selectionChange)="onCompanySelectionChange()">
+                        <mat-option *ngFor="let company of companies" [value]="company.userId">
+                            {{ company.firstName }} {{company.lastName}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="companyLeaderDetailForm.get('companyId').hasError('required')">
+                        Benutzertyp erforderlich
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+        </div>
+    </form>
+
+
+</ng-template>
+
+<ng-template #companyDetailFormTemplate>
+    <h1 class="mt-1">Create Your Company</h1>
+    <div class="w-20 mb-5 mx-auto rounded-full overflow-hidden">
+        <a href="javascript:void(0)" (click)="profileImg.click()">
+            <img [src]="defImg" alt="" />
+        </a>
+        <input type="file" class="hidden" #profileImg />
+    </div>
+    <form [formGroup]="companyDetailForm">
+        <div class="grid grid-cols-2 flex-wrap gap-x-5">
+            <div class="flex flex-auto w-full">
+                <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Company name</mat-label>
+                    <input matInput placeholder="company name" formControlName="name" #name required />
+                    <mat-error *ngIf="companyDetailForm.get('name').hasError('required')">
+                        name erforderlich
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="flex flex-auto w-full">
+                <!-- <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Company category</mat-label>
+                    <input matInput placeholder="Company category" formControlName="category" required />
+                    <mat-error *ngIf="companyDetailForm.get('category').hasError('required')">
+                        Company category erforderlich
+                    </mat-error>
+                </mat-form-field> -->
+                <mat-form-field class="w-full">
+                    <mat-label>Comapny Category</mat-label>
+                    <input type="text" placeholder="Comapny Category" aria-label="Comapny Category"
+                        name="companyCategory" matInput [formControl]="category" [matAutocomplete]="auto">
+                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="OnHumanSelected($event.option)">
+                        <mat-option *ngFor="let category of categoriesList" [value]="category.name" [matTooltipPosition]="'below'" [matTooltip]="category.description">
+                            {{category.name}}
+                        </mat-option>
+                        <mat-option class="custome_category bg-gray-300 flex justify-center items-center"
+                            (click)="openCategoryAddModal(addCategoryFormTemplate)"> <span class=""><mat-icon
+                                    class="m-0">add</mat-icon></span> create new category</mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+            </div>
+
+            <div class="flex flex-auto w-full">
+                <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Company E-mail</mat-label>
+                    <input matInput type="email" placeholder="Company email" formControlName="email" required />
+                    <mat-error *ngIf="companyDetailForm.get('email').hasError('required')">
+                        E-mail is erforderlich
+                    </mat-error>
+                    <mat-error *ngIf="companyDetailForm.get('email').hasError('email')">
+                        Bitte geben Sie eine gültige E-Mail-Adresse ein
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="flex flex-auto w-full">
+                <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Website url</mat-label>
+                    <input matInput type="url" placeholder="url" formControlName="url" required />
+                    <mat-error *ngIf="companyDetailForm.get('url').hasError('required')">
+                        Url is erforderlich
+                    </mat-error>
+                    <mat-error *ngIf="companyDetailForm.get('url').hasError('url')">
+                        Bitte geben Sie eine gültige Company Url ein
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="flex flex-auto w-full">
+                <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Company call link</mat-label>
+                    <input matInput type="url" placeholder="url" formControlName="linkForVideoCall" required />
+                    <mat-error *ngIf="companyDetailForm.get('linkForVideoCall').hasError('required')">
+                        Url is erforderlich
+                    </mat-error>
+                    <mat-error *ngIf="companyDetailForm.get('linkForVideoCall').hasError('linkForVideoCall')">
+                        Bitte geben Sie eine gültige Call Url ein
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="flex flex-auto w-full">
+                <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Opening Hours</mat-label>
+                    <input matInput type="time" formControlName="openingHours" required readonly
+                        [ngxTimepicker]="starttime" [format]="24" />
+                    <ngx-material-timepicker #starttime [format]="24"></ngx-material-timepicker>
+                    <mat-error *ngIf="companyDetailForm.get('openingHours').hasError('required')">
+                        Address is erforderlich
+                    </mat-error>
+                    <mat-error *ngIf="companyDetailForm.get('openingHours').hasError('openingHours')">
+                        Bitte geben Sie eine gültige Company Address ein
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <!-- 
+            <div class="flex flex-auto w-full">
+                <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Opening Hours</mat-label>
+                    <input type="time" name="openingTime" [ngxTimepicker]="starttime"
+                    formControlName="openingHours" id="" [format]="24" >
+                    <ngx-material-timepicker #starttime [format]="24"></ngx-material-timepicker>
+                    <mat-error *ngIf="companyDetailForm.get('openingHours').hasError('required')">
+                        Address is erforderlich
+                    </mat-error>
+                    <mat-error *ngIf="companyDetailForm.get('openingHours').hasError('openingHours')">
+                        Bitte geben Sie eine gültige Company Address ein
+                    </mat-error>
+                </mat-form-field>
+            </div> -->
+
+
+
+
+            <!-- <div class="flex flex-auto w-full">
+                <button
+                    class="p-1 border h-12 rounded-full border-sky-600 hover:bg-sky-600 text-sky-600 hover:text-white transition-all"
+                    (click)="openTimeModal()">Add
+                    Company's Hours</button>
+            </div> -->
+
+            <!--
+
+                    <div class="flex flex-auto w-full">
+                        <mat-form-field appearance="fill" class="w-full">
+                            <mat-label>Organization</mat-label>
+                            <input matInput placeholder="Organization" formControlName="organization" required />
+                            <mat-error *ngIf="companyDetailForm.get('organization').hasError('required')">
+                                Organization is erforderlich
+                            </mat-error>
+                            <mat-error *ngIf="companyDetailForm.get('organization').hasError('organization')">
+                                Bitte geben Sie eine gültige Organization ein
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    -->
+            <div class="flex flex-auto w-full">
+                <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Company Type</mat-label>
+                    <input matInput type="text" placeholder="Software" formControlName="type" required />
+                    <mat-error *ngIf="companyDetailForm.get('type').hasError('required')">
+                        Url is erforderlich
+                    </mat-error>
+                    <mat-error *ngIf="companyDetailForm.get('type').hasError('type')">
+                        Bitte geben Sie eine gültige Call Url ein
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="flex flex-auto w-full">
+                <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Company leader video call link</mat-label>
+                    <input matInput type="url" placeholder="www.link.com" formControlName="videoCallLeader" required />
+                    <mat-error *ngIf="companyDetailForm.get('videoCallLeader').hasError('required')">
+                        videoCallLeader is erforderlich
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="flex flex-auto w-full">
+                <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Company employee video call link</mat-label>
+                    <input matInput type="url" placeholder="www.link.com" formControlName="videoCallEmployee"
+                        required />
+                    <mat-error *ngIf="companyDetailForm.get('videoCallEmployee').hasError('required')">
+                        videoCallEmployee is erforderlich
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <!-- 
+                
+             -->
+            <div class="flex flex-auto w-full">
+                <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Company description</mat-label>
+                    <textarea matInput placeholder="Company description" formControlName="description"
+                        required></textarea>
+                    <mat-error *ngIf="companyDetailForm.get('description').hasError('required')">
+                        Description is erforderlich
+                    </mat-error>
+                    <mat-error *ngIf="companyDetailForm.get('description').hasError('description')">
+                        Bitte geben Sie eine gültige Company description ein
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+        </div>
+    </form>
+
+</ng-template>
+
+<ng-template #userDetailFormTemplate errorMessage="Name is required.">
+    <form [formGroup]="userDetailForm">
+        <h1>Über Kontakte</h1>
+        <div class="w-20 mb-5 mx-auto rounded-full overflow-hidden">
+            <a href="javascript:void(0)" (click)="profileImg.click()">
+                <img [src]="defImg" alt="" />
+            </a>
+            <input type="file" class="hidden" #profileImg />
+        </div>
+        <div class="grid grid-cols-2 flex-wrap gap-x-5">
+            <div class="flex flex-auto w-full">
+                <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Vorname</mat-label>
+                    <input matInput placeholder="First name" formControlName="firstName" #firstName required />
+                    <mat-error *ngIf="userDetailForm.get('firstName').hasError('required')">
+                        Vorname erforderlich
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="flex flex-auto w-full">
+                <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Nachname</mat-label>
+                    <input matInput placeholder="Last name" formControlName="lastName" required />
+                    <mat-error *ngIf="userDetailForm.get('lastName').hasError('required')">
+                        Nachname erforderlich
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="flex flex-auto w-full">
+                <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Geburtsdatum</mat-label>
+                    <input matInput formControlName="dob" [matDatepicker]="picker" [max]="maxDate" />
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-error *ngIf="userDetailForm.get('dob').hasError('required')">
+                        Geburtsdatum erforderlich
+                    </mat-error>
+                    <mat-error *ngIf="userDetailForm.get('dob').hasError('minimumAge')">
+                        You must be at least 18 years old
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="flex flex-auto w-full">
+                <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Telefonnummer</mat-label>
+                    <input matInput type="phone" placeholder="phone number" formControlName="phone" required />
+                    <mat-error *ngIf="userDetailForm.get('phone').hasError('required')">
+                        Telefonnummer erforderlich
+                    </mat-error>
+                    <mat-error *ngIf="userDetailForm.get('phone').hasError('minlength')">
+                        Bitte geben Sie eine gültige Mobiltelefonnummer ein
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="flex flex-auto w-full">
+                <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>E-mail</mat-label>
+                    <input matInput type="email" placeholder="email" formControlName="email" required />
+                    <mat-error *ngIf="userDetailForm.get('email').hasError('required')">
+                        E-mail is erforderlich
+                    </mat-error>
+                    <mat-error *ngIf="userDetailForm.get('email').hasError('email')">
+                        Bitte geben Sie eine gültige E-Mail-Adresse ein
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="w-full flex items-center flex-auto">
+                <mat-label><ng-container>Gender :* </ng-container></mat-label>
+                <!-- <h3 class="font-semibold">Geschlecht :*</h3> -->
+                <mat-radio-group aria-label="Select an option" [formControlName]="'gender'">
+                    <mat-radio-button value="M">Male</mat-radio-button>
+                    <mat-radio-button value="F" class="ml-1">Female</mat-radio-button>
+                    <mat-radio-button value="O" class="ml-1">Other</mat-radio-button>
+                    <mat-error
+                        *ngIf="!userDetailForm.get('gender').untouched && userDetailForm.get('gender').hasError('required')">
+                        <ng-container>gender is required</ng-container>
+                    </mat-error>
+                </mat-radio-group>
+                <!-- <mat-error
+                    *ngIf="!signUpForm.get('gender').untouched && signUpForm.get('gender').hasError('required')">
+                    <ng-container>gender is required</ng-container>
+                </mat-error> -->
+            </div>
+            <div class="flex flex-auto w-full">
+                <mat-form-field class="flex-auto">
+                    <mat-label><ng-container i18n="@@signup.password">password</ng-container></mat-label>
+                    <input id="password" matInput type="password" (input)="checkPassword(passwordField.value)"
+                        [formControlName]="'password'" #passwordField />
+                    <button mat-icon-button type="button" (click)="
+                                                                    passwordField.type === 'password'
+                                                                      ? (passwordField.type = 'text')
+                                                                      : (passwordField.type = 'password')
+                                                                  " matSuffix>
+                        <mat-icon class="icon-size-5" *ngIf="passwordField.type === 'password'"
+                            [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                        <mat-icon class="icon-size-5" *ngIf="passwordField.type === 'text'"
+                            [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
+                    </button>
+                    <mat-error> Passwort ist erforderlich </mat-error>
+                    <div *ngIf="passwordField.value">
+                        {{ passwordStatus }}
+                    </div>
+                </mat-form-field>
+            </div>
+
+            <!-- confirm password -->
+            <div class="flex flex-auto w-full">
+                <mat-form-field class="flex-auto">
+                    <mat-label><ng-container i18n="@@password.confirm">Confirm</ng-container></mat-label>
+                    <input id="cPassword" matInput type="password" [formControlName]="'cPassword'" #cPasswordField />
+                    <button mat-icon-button type="button" (click)="
+                                                                                                    cPasswordField.type === 'password'
+                                                                                                      ? (cPasswordField.type = 'text')
+                                                                                                      : (cPasswordField.type = 'password')
+                                                                                                  " matSuffix>
+                        <mat-icon class="icon-size-5" *ngIf="cPasswordField.type === 'password'"
+                            [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                        <mat-icon class="icon-size-5" *ngIf="cPasswordField.type === 'text'"
+                            [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
+                    </button>
+                    <mat-error>
+                        <ng-container i18n="@@password.confirm.required">confirm password required</ng-container>
+                    </mat-error>
+                    <mat-error *ngIf="
+                                                                                                    password.value !== cPassword.value && cPassword.value !== ''
+                                                                                                  ">
+                        Passwort stimmt nicht überein
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- <div class="flex flex-auto w-full">
+                        <mat-form-field class="w-50 flex-auto">
+                            <mat-label>Company list</mat-label>
+                            <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:briefcase'"></mat-icon>
+                            <mat-select [formControlName]="'user'" placeholder="Select role">
+                                <mat-option *ngFor="let userType of types" [value]="userType.name">
+                                    {{ userType.label | titlecase }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="userDetailForm.hasError('required')">Benutzertyp erforderlich</mat-error>
+                        </mat-form-field>
+                    </div> -->
+
+        </div>
+    </form>
+</ng-template>
+<ng-template #addressFormTemplate errorMessage="Address is required.">
+    <form [formGroup]="addressForm">
+        <ng-template matStepLabel>Füllen Sie die Kontaktadresse aus</ng-template>
+        <div class="grid grid-cols-2 flex-wrap gap-x-5">
+            <div class="flex flex-auto w-full">
+                <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Hausnummer</mat-label>
+                    <input matInput type="text" placeholder="House No." formControlName="houseNo" #firstName required />
+                    <mat-error *ngIf="addressForm.get('houseNo').hasError('required')">
+                        Hausnummer erforderlich
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="flex flex-auto w-full">
+                <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Straße</mat-label>
+                    <input matInput placeholder="street" formControlName="street" required />
+                    <mat-error *ngIf="addressForm.get('street').hasError('required')">
+                        Straße erforderlich
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="flex flex-auto w-full">
+                <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Standort</mat-label>
+                    <input matInput placeholder="Location" formControlName="location" required />
+                    <mat-error *ngIf="addressForm.get('location').hasError('required')">
+                        Standort erforderlich
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="flex flex-auto w-full">
+                <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Stadt</mat-label>
+                    <input matInput type="text" placeholder="city" formControlName="city" required />
+                    <mat-error *ngIf="addressForm.get('city').hasError('required')">
+                        Stadt erforderlich
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <!-- Country field -->
+            <mat-form-field class="w-full flex-auto">
+                <mat-label><ng-container i18n="@@country"> Land</ng-container></mat-label>
+                <mat-select [formControlName]="'country'" #country placeholder="Country" name="country"
+                    (ngModelChange)="getCountryName($event)">
+                    <mat-option *ngFor="let country of countryValue" [value]="country.CountryName">
+                        {{ country.CountryName }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="addressForm.get('country').hasError('required')">
+                    <ng-container i18n="@@country.required">Land erforderlich</ng-container>
+                </mat-error>
+            </mat-form-field>
+            <!-- state field -->
+            <mat-form-field class="w-full flex-auto">
+                <mat-label><ng-container i18n="@@state">Zustand</ng-container></mat-label>
+                <mat-select [formControlName]="'state'" #state placeholder="{{ placeholder.state }}" name="state">
+                    <mat-option [value]="null">
+                        No Selection
+                    </mat-option>
+                    <mat-option *ngFor="let state of states" [value]="state">
+                        {{ state }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="addressForm.get('state').hasError('required')">
+                    <ng-container i18n="@@state.required">Zustand erforderlich</ng-container>
+                </mat-error>
+            </mat-form-field>
+            <div class="flex flex-auto col-span-2 w-full">
+                <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>PLZ</mat-label>
+                    <input matInput type="text" placeholder="Zip" formControlName="zip" required />
+                    <mat-error *ngIf="addressForm.get('zip').hasError('required')">
+                        PLZ erforderlich
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+    </form>
+</ng-template>
+<ng-template #additionalInfoFormTemplate errorMessage="Address is required.">
+    <form [formGroup]="additionalInfoForm">
+        <ng-template matStepLabel>Füllen Sie die Adresse des Interpreters aus</ng-template>
+        <div class="grid grid-cols-2 flex-wrap gap-x-5">
+            <div class="flex flex-auto w-full">
+                <mat-form-field class="example-chip-list w-full" appearance="fill">
+                    <mat-label>Themen deines Wissens</mat-label>
+                    <mat-chip-list #chipList aria-label="Fruit selection">
+                        <mat-chip *ngFor="let topic of knoladgeTopics" (removed)="remove(topic)">
+                            {{ topic }}
+                            <button matChipRemove>
+                                <mat-icon>cancel</mat-icon>
+                            </button>
+                        </mat-chip>
+                        <input placeholder="New topic..." [matChipInputFor]="chipList"
+                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+                            (matChipInputTokenEnd)="add($event)" formControlName="topicKnowladge" />
+                    </mat-chip-list>
+                    <mat-error *ngIf="
+                  additionalInfoForm.get('topicKnowladge').hasError('requird')
+                "></mat-error>
+                </mat-form-field>
+            </div>
+            <div class="w-full flex-auto">
+                <h3 class="font-semibold ml-5">Hat Zertifikat :*</h3>
+                <mat-radio-group aria-label="Select an option" [formControlName]="'certificate'"
+                    class="mt-5 ml-5 block">
+                    <mat-radio-button value="true">Yes</mat-radio-button>
+                    <mat-radio-button value="false" class="ml-1">No</mat-radio-button>
+                </mat-radio-group>
+                <mat-error *ngIf="
+                !additionalInfoForm.get('certificate').untouched &&
+                additionalInfoForm.get('certificate').hasError('required')
+              ">
+                    <ng-container>Zertifikat. erforderlich</ng-container>
+                </mat-error>
+            </div>
+            <div class="flex flex-auto col-span-2 w-full">
+                <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Link für Videokonferenz</mat-label>
+                    <input matInput type="url" placeholder="ex. www.abc.com" formControlName="linkForVideocall"
+                        #firstName required />
+                    <mat-error *ngIf="
+                  additionalInfoForm
+                    .get('linkForVideocall')
+                    .hasError('linkForVideocall')
+                ">
+                        Link für Videokonferenz erforderlich
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <br />
+            <div class="col-span-2">
+                <h5 class="h5 fw-bold">Bankverbindung</h5>
+            </div>
+            <div class="flex flex-auto w-full">
+                <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Name der Bank</mat-label>
+                    <input matInput placeholder="Name of Bank" formControlName="bankName" #firstName required />
+                    <mat-error *ngIf="additionalInfoForm.get('bankName').hasError('bankName')">
+                        Bankname erforderlich
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="flex flex-auto w-full">
+                <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Bankverbindung</mat-label>
+                    <input matInput placeholder="Bank details " formControlName="bankDetails" #firstName required />
+                    <mat-error *ngIf="
+                  additionalInfoForm.get('bankDetails').hasError('bankDetails')
+                ">
+                        Bankverbindung erforderlich
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <!-- state field -->
+            <div class="flex flex-auto w-full">
+                <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Bankdaten</mat-label>
+                    <input matInput placeholder="Bank data " formControlName="bankData" #firstName required />
+                    <mat-error *ngIf="additionalInfoForm.get('bankData').hasError('bankData')">
+                        Bankdaten erforderlich
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="flex flex-auto w-full">
+                <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Zahlungsintervall</mat-label>
+                    <input matInput placeholder="Payment Interval" formControlName="paymentInterval" #firstName
+                        required />
+                    <mat-error *ngIf="
+                  additionalInfoForm
+                    .get('paymentInterval')
+                    .hasError('paymentInterval')
+                ">
+                        Zahlungsintervall erforderlich
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+    </form>
+</ng-template>
+<ng-template #fromCompanyTemplate>
+    <form [formGroup]="fromCompanyForm">
+        <div class="grid grid-cols-2 gap-4">
+            <mat-form-field class="w-full flex-auto">
+                <mat-label><ng-container>Company Name</ng-container></mat-label>
+                <mat-select [formControlName]="'company'" placeholder="company" name="company"
+                    (ngModelChange)="companySelectionChange($event)">
+                    <mat-option *ngFor="let company of companies" [value]="{id: company.id, name: company.name}">
+                        {{ company.name }}
+                    </mat-option>
+                    <mat-option [value]="'createCompany'">can't find your company? create one</mat-option>
+                </mat-select>
+                <mat-error *ngIf="fromCompanyForm.get('company').hasError('required')">
+                    <ng-container>company selection required</ng-container>
+                </mat-error>
+            </mat-form-field>
+
+            <div class="flex flex-auto w-full">
+                <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Link for videocall</mat-label>
+                    <input matInput type="url" placeholder="Video call URL" formControlName="videoCallUrl" required />
+                    <mat-error *ngIf="fromCompanyForm.get('videoCallUrl').hasError('required')">
+                        Bankdaten erforderlich
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+    </form>
+</ng-template>
+<ng-template #addCategoryFormTemplate>
+    <h2 mat-dialog-title>Add New Category</h2>
+    <form [formGroup]="addCategoryForm" class="grid grid-cols-1">
+        <div>
+            <mat-form-field class="w-full">
+                <mat-label>
+                    create category
+                </mat-label>
+                <input type="text" matInput placeholder="Category Name" formControlName="name" required>
+                <mat-error *ngIf="addCategoryForm.get('name').hasError('required')">
+                    category name required
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field class="w-full">
+                <mat-label>category description</mat-label>
+                <textarea matInput placeholder="Ex. this category is for" formControlName="description"
+                    required></textarea>
+                <mat-error *ngIf="addCategoryForm.get('description').hasError('required')">
+                    category name required
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <mat-dialog-actions align="end">
+            <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Add</button>
+        </mat-dialog-actions>
+    </form>
+</ng-template>

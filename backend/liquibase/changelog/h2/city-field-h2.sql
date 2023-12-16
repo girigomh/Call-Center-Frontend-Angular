@@ -1,0 +1,1 @@
+alter table users add column city varchar(255) default null;

@@ -1,0 +1,122 @@
+.bottom_card {
+  margin: 2rem 0 0;
+}
+.phone_icon mat-icon {
+  height: 100%;
+  width: 100%;
+  font-size: 75px;
+}
+.main_grid_div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.grid_icon {
+  width: 100%;
+}
+.custom_card {
+  width: 100%;
+}
+.inside_custom_card > div {
+  margin-right: 10px;
+}
+.weather {
+  // background-image: url("/assets/images/weather/rain.jpg");
+}
+
+.rainy {
+  background-image: url("https://giphy.com/embed/3osBLhm4uJMRK8tJSw");
+  background-size: cover;
+}
+.sunny {
+  background-image: url("https://giphy.com/gifs/sky-beautiful-UqWwKG1XGutck");
+  background-size: cover;
+}
+.weather-video{
+  object-position: 100% 65%;
+}
+.inside_custom_card > div:last-child {
+  margin-right: 0;
+}
+@media (max-width: 1279px) {
+  .mobile_full {
+    height: 100% !important;
+  }
+}
+@media (max-width: 1024px) {
+  .middele_sec_dashboard {
+    width: 100% !important;
+  }
+
+  .mobile_full_main {
+    width: 100% !important;
+  }
+
+  .mobile_full {
+    height: 100% !important;
+  }
+}
+
+@media (max-width: 959px) {
+  .grid_icon {
+    width: 49%;
+  }
+}
+@media (max-width: 600px) {
+  .mobile_full_main {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+  }
+  .main_grid_div {
+    display: flex;
+
+    flex-wrap: wrap;
+  }
+  .mobile_full {
+    width: 100% !important;
+    height: 100% !important;
+  }
+  .bottom_card {
+    width: 100% !important;
+  }
+  .mat-tab-link {
+    min-width: 160px !important;
+  }
+  .grid_icon {
+    width: 49%;
+  }
+}
+@media (max-width: 547px) {
+  .grid_icon {
+    width: 48%;
+  }
+}
+@media (max-width: 425px) {
+  .grid_icon {
+    width: 100%;
+  }
+  .inside_custom_card {
+    flex-direction: column;
+  }
+  .inside_custom_card > div {
+    width: 100% !important;
+  }
+  .inside_custom_card > div:first-child {
+    margin-bottom: 10px;
+  }
+}
+@media (max-width: 280px) {
+  .grid_icon {
+    width: 100%;
+  }
+  .inside_custom_card {
+    flex-direction: column !important;
+  }
+  .inside_custom_card > div {
+    width: 100% !important;
+    margin-bottom: 10px;
+  }
+  .inside_custom_card > div:last-child {
+    justify-content: unset !important;
+  }
+}

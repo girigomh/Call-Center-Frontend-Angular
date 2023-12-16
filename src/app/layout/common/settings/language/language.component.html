@@ -1,0 +1,44 @@
+<div class="w-full max-w-3xl">
+
+    <!-- Form -->
+    <form [formGroup]="languageForm">
+        <div class="w-full text-xl">Spracheinstellungen</div>
+        <div class="w-full mt-8 font-medium">Sprache:</div>
+        <div class="grid grid-cols-1 gap-4 w-full mt-4">
+            <!-- Language Option -->
+            <div class="flex items-center justify-between">
+                <div class="flex-auto leading-6 cursor-pointer" (click)="comments.toggle()">
+                    Deutsch – Deutschland
+                </div>
+                <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'comments'" #comments>
+                </mat-slide-toggle>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <div class="flex-auto leading-6 cursor-pointer" (click)="comments.toggle()">
+                    Deutsch – Österreich
+                </div>
+                <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'comments'" #comments>
+                </mat-slide-toggle>
+            </div>
+            <div class="flex items-center justify-between">
+                <div class="flex-auto leading-6 cursor-pointer" (click)="comments.toggle()">
+                    Deutsch – Schweiz
+                </div>
+                <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'comments'" #comments>
+                </mat-slide-toggle>
+            </div>
+            <!-- Divider -->
+            <div class="my-10 border-t"></div>
+
+            <!-- Actions -->
+            <div class="flex items-center justify-end">
+                <button mat-stroked-button type="button">
+                    Abbrechen
+                </button>
+                <button class="ml-4" mat-flat-button type="button" color="'primary'">Speichern
+                </button>
+            </div>
+
+            <!-- </form> -->
+        </div>

@@ -1,0 +1,275 @@
+<div class="relative inset-0 flex flex-col min-w-0 overflow-hidden w-full">
+
+    <mat-drawer-container class="flex-auto h-full bg-card dark:bg-transparent" (backdropClick)="onBackdropClicked()">
+
+        <!-- Drawer -->
+        <mat-drawer class="w-full md:w-160 dark:bg-gray-900" [mode]="drawerMode" [opened]="false" [position]="'end'"
+            [disableClose]="false" #matDrawer>
+            <router-outlet></router-outlet>
+        </mat-drawer>
+
+        <mat-drawer-content class="flex flex-col h-screen overflow-hidden">
+
+
+            <!-- Main -->
+            <div class>
+
+                <!-- Header -->
+                <div class="flex flex-col sm:flex-row md:flex-col flex-auto justify-between py-8 px-6 md:px-8 border-b">
+
+                    <!-- userType -->
+                    <div>
+                        <div class="text-4xl font-extrabold tracking-tight leading-none">
+                            <mat-icon svgIcon="heroicons_outline:user-group" class="mr-3 mat-icon text-2xl"></mat-icon>
+                            <span i18n="@@contacts.userType">Kontakte</span>
+                        </div>
+                        <div class="ml-0.5 font-medium text-secondary">
+                            <ng-container *ngIf="contactsCount > 0">
+                                {{contactsCount}}
+                            </ng-container>
+                            {{locale !== 'de' ?(contactsCount | i18nPlural: {
+                            '=0' : 'No contacts',
+                            '=1' : 'contact',
+                            'other': 'contacts'
+                            }) : (contactsCount | i18nPlural: {
+                            '=0' : 'No kontakte',
+                            '=1' : 'kontakte',
+                            'other': 'kontakte'})}}
+                        </div>
+                    </div>
+
+                    <!-- Main actions -->
+                    <div class="flex items-center mt-4 sm:mt-0 md:mt-4">
+                        <div class="flex-auto">
+                            <div class="flex ">
+                                <div class="w-full">
+                                    <mat-form-field class="fuse-mat-dense fuse-mat-rounded w-full min-w-50"
+                                        subscriptSizing="dynamic">
+                                        <mat-icon class="icon-size-5" matPrefix
+                                            [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                                        <input matInput [autocomplete]="'off'" [placeholder]="searchPlaceholder"
+                                            [(ngModel)]="search" (keyup)="performSearch($event)">
+                                    </mat-form-field>
+                                </div>
+                                <div class="flex">
+                                    <button class="ml-4" mat-flat-button [color]="'primary'" routerLink="create"
+                                        *ngIf="!showAdd">
+                                        <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                                        <span class="ml-2 mr-1">Hinzufügen</span>
+                                    </button>
+                                    <div class="flex space-x-2 justify-end">
+                                        <div>
+                                            <button type="button" mat-flat-button [color]="'primary'"
+                                                (click)="changeView()"
+                                                class="inline-block rounded-full ml-2 mb-5 text-white leading-normal uppercase shadow-md focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out w-9 h-9">
+                                                <mat-icon class="mat-18 text-xl px-px text-white" *ngIf="change"
+                                                    svgIcon="heroicons_outline:view-grid"></mat-icon>
+                                                <mat-icon class="mat-18 text-white px-px"
+                                                    svgIcon="heroicons_outline:view-list" *ngIf="!change"></mat-icon>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="lg:flex justify-evenly">
+                                <div>
+                                    <input type="checkbox" id="interpreter" class="px-1"
+                                        [(ngModel)]="isInterpreterChecked" (change)="performSearch($event)">
+                                    <label class="capitalize ml-2" i18n="@@INTERPRETER" for="interpreter">
+                                        Interpreter
+                                    </label>
+                                </div>
+                                <div>
+                                    <input type="checkbox" id="captioner" class="px-1" [(ngModel)]="isCaptionerChecked"
+                                        (change)="performSearch($event)">
+                                    <label i18n="@@CAPTIONER" for="captioner" class="capitalize ml-2">
+                                        captioner
+                                    </label>
+                                </div>
+                                <div>
+                                    <input type="checkbox" id="switching" class="px-1"
+                                        [(ngModel)]="isSwitchingcenterChecked" (change)="performSearch($event)">
+                                    <label for="" i18n="@@SWITCHINGCALLCENTER" class="capitalize ml-2">
+                                        Vermittlungszentrale
+                                    </label>
+                                </div>
+                                <div>
+                                    <input type="checkbox" class="px-1" [(ngModel)]="isCompanyChecked"
+                                        (change)="performSearch($event)">
+                                    <label class="capitalize ml-2" for="company" i18n="@@COMPANY">
+                                        Firma
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contacts list -->
+            <div class="relative overflow-y-scroll">
+
+                <ng-container *ngIf="change && paginatedContacts?.length">
+                    <ng-container
+                        *ngFor="let  contact of paginatedContacts | filter:search; let i = index; trackBy: trackByFn">
+                        <!-- Group -->
+                        <div *ngIf="contact.firstName !== null || contact.firstName !== undefined || !contact.name ">
+
+                            <ng-container
+                                *ngIf="i === 0 || contact?.firstName?.toLowerCase().charAt(0) !== paginatedContacts[i - 1].firstName?.toLowerCase().charAt(0)">
+                                <div class=" z-10 sticky top-0 -mt-px px-6 py-1 md:px-8 border-t border-b font-medium
+                                    uppercase text-secondary bg-gray-50 dark:bg-gray-900">
+                                    {{ contact?.firstName?.charAt(0) || contact?.name?.charAt(0) }}
+                                </div>
+                            </ng-container>
+
+                        </div>
+
+                        <!-- Contact -->
+                        <a class="z-20 flex items-center px-6 py-4 md:px-8 cursor-pointer border-b"
+                            [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedContact || selectedContact.userId !== contact.userId,
+                            'bg-primary-50 dark:bg-hover': selectedContact && selectedContact.userId === contact.userId}" [routerLink]="['./', contact.userId ? contact?.userId : contact?.id]"  [queryParams]="{userType: contact?.profile?.name}"
+                            *ngIf="true || checkContactFilters(contact)">
+
+                            <div
+                                class="flex flex-0 items-center justify-center w-10 h-10 rounded-full position-relative ">
+                                <ng-container *ngIf="contact?.profilePhoto">
+                                    <img class="object-cover w-full h-full rounded-[20px]" [src]="contact.profilePhoto"
+                                        alt="Contact profilePhoto" />
+                                </ng-container>
+                                <ng-container *ngIf="!contact?.profilePhoto">
+
+                                    <div
+                                        class="flex items-center justify-center w-full h-full rounded-full text-lg uppercase bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
+                                        {{contact?.firstname !== null ? contact?.firstName?.charAt(0) : contact?.name?.charAt(0)}}
+
+                                    </div>
+                                </ng-container>
+                            </div>
+                            <div class="min-w-0 ml-4">
+                                <div class="font-medium leading-5 truncate" *ngIf="contact.firstName || contact.lastName">{{contact.firstName}} {{contact.lastName}}
+                                </div>
+                                <div class="font-medium leading-5 truncate" *ngIf="!contact.firstName || !contact.lastName">{{contact.name}}</div>
+                                <div class="leading-5 truncate text-secondary flex">
+                                    <!-- <mat-icon matChipprofilePhoto class="text-[19px]"
+                                        *ngIf="contact.userType === 'captioner' || contact.userType === 'Bildunterschrift'">voice_chat</mat-icon>
+                                    <mat-icon matChipprofilePhoto class="text-[19px]"
+                                        *ngIf="contact.userType === 'translator' || contact.userType === 'Übersetzer'">video_camera_front</mat-icon>
+                                    <mat-icon matChipprofilePhoto class="text-[19px]"
+                                        *ngIf="contact.userType === '' || contact.userType === undefined"
+                                        [svgIcon]="'heroicons_solid:user-circle'"></mat-icon> -->
+                                    {{contact.profile.name !== undefined ? (contact.profile.name.split('_').join(' ') | titlecase) : 'anonymous'}}
+                                </div>
+                            </div>
+                        
+                            <!-- <div class="w-60">
+                                <h5 class="text-gray-900 text-xl font-medium mb-2">{{contact.firstName}}</h5>
+                                <p class="text-gray-700 text-base mb-4">{{contact.userType}}</p>
+                                <div class="d-flex border-t-2   justify-between">
+                                    <div class="d-flex items-center p-2 border-r-2 w-30">
+                                        <button class="flex align-center">
+                                            <mat-icon class="text-xl">email</mat-icon>
+                                            <span class="pl-2 text-base">Email</span>
+                                        </button>
+                                    </div>
+
+                                    <div class="d-flex items-center p-2">
+                                        <button class="flex align-center">
+                                            <mat-icon class="text-xl">phone</mat-icon>
+                                            <span class="pl-2 text-base">Anrufen</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div> -->
+                        </a>
+                    </ng-container>
+                </ng-container>
+
+                <!-- No contacts
+                <ng-template #noContacts>
+                    <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">There are no
+                        contacts!</div>
+                </ng-template> -->
+
+            </div>
+
+            <div class="px-8 py-8 justify-center d-flex flex-wrap overflow-y-scroll" *ngIf="!change && contacts.length">
+                <ng-container>
+                    <ng-container
+                        *ngFor="let contact of paginatedContacts| filter:search; let i = index; trackBy: trackByFn">
+                        <!-- Contact -->
+                        <!-- card-format -->
+                        <div class="w-64 mx-3 my-3" *ngIf="!change">
+                            <div
+                                class="rounded-lg shadow-lg bg-white d-flex flex-col justify-center items-center text-center">
+                                <!-- <ng-container *ngIf="contact.profilePhoto">
+                                    <img class="object-cover rounded-full w-40" [src]="contact.profilePhoto"
+                                        alt="Contact profilePhoto" />
+                                </ng-container> -->
+                                <ng-container>
+                                    <div
+                                        class="flex items-center w-40 h-40 rounded-full justify-center text-6xl uppercase bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
+                                        {{contact.firstName.charAt(0)}}
+                                    </div>
+                                </ng-container>
+                                <div class="w-60">
+                                    <h5 class="text-gray-900 text-xl font-medium mb-2">{{contact.firstName}}
+                                        {{contact.lastName}}</h5>
+                                    <p class="text-gray-700 text-base mb-4">{{contact.profile.name}}</p>
+                                    <div class="d-flex border-t-2   justify-between">
+                                        <div class="d-flex items-center p-2 border-r-2 w-30">
+                                            <button class="flex align-center">
+                                                <mat-icon class="text-xl">email</mat-icon>
+                                                <span class="pl-2 text-base">Email</span>
+                                            </button>
+                                        </div>
+
+                                        <div class="d-flex items-center p-2">
+                                            <button class="flex align-center">
+                                                <mat-icon class="text-xl">phone</mat-icon>
+                                                <span class="pl-2 text-base">Call</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </ng-container>
+
+            </div>
+        </mat-drawer-content>
+    </mat-drawer-container>
+
+    <!-- Pagination controls -->
+    <div class="flex justify-center mt-4">
+        <nav>
+            <ul class="pagination">
+                <li class="page-item" [class.disabled]="currentPage === 1">
+                    <a class="page-link" (click)="changePage(0)" aria-label="First">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item" [class.disabled]="currentPage === 1">
+                    <a class="page-link" (click)="changePage(currentPage - 1)" aria-label="Previous">
+                        <span aria-hidden="true">&lsaquo;</span>
+                    </a>
+                </li>
+                <li class="page-item" *ngFor="let index of getContactRange()" [class.active]="currentPage === page + 1">
+                    <a class="page-link" (click)="changePage(page + 1)">{{ page + 1 }}</a>
+                </li>
+                <li class="page-item" [class.disabled]="currentPage === totalPages-1">
+                    <a class="page-link" (click)="changePage(currentPage + 1)" aria-label="Next">
+                        <span aria-hidden="true">&rsaquo;</span>
+                    </a>
+                </li>
+                <li class="page-item" [class.disabled]="currentPage === totalPages">
+                    <a class="page-link" (click)="changePage(totalPages)" aria-label="Last">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+</div>

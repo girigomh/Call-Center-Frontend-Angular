@@ -1,0 +1,190 @@
+<div>
+    <h1 class="font-bold text-xl my-3 pb-4">Dolmetschbstellung</h1>
+
+    <form [formGroup]="appointmentForm">
+        <div class="block py-5 text-base font-bold">
+            <p class="py-1">Ich brauche einen Dolmetscherlund/oder SchriftdolmetscherIn</p>
+            <div class="ml-4 mt-3 text-xl">
+                <mat-checkbox formControlName="interpreterType" value="DolmetscherIn">DolmetscherIn</mat-checkbox>
+
+                <p class="ml-6">und/oder</p>
+                <mat-checkbox formControlName="interpreterType"
+                    value="SchriftdolmetscherIn">SchriftdolmetscherIn</mat-checkbox>
+
+            </div>
+        </div>
+
+        <div>
+            <button (click)="navigateToNextStep()"
+                [disabled]="!appointmentForm.get('interpreterType').value === null">Next</button>
+
+        </div>
+    </form>
+
+    <p class="font-bold text-base py-3">Wann brauchst du eine(n) DolmetscherIn oder SchriftdolmetscherIn?</p>
+    <form [formGroup]="appointmentForm">
+        <div class="flex flex-auto w-full">
+            <mat-form-field appearance="fill" class="w-full">
+                <mat-label>Datum</mat-label>
+                <input matInput [matDatepicker]="datePicker" placeholder="Datum" required [min]="todayDate"
+                    formControlName="date" />
+                <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+                <mat-datepicker #datePicker></mat-datepicker>
+                <mat-error *ngIf="appointmentForm.get('date').hasError('required')">
+                    date is erforderlich
+                </mat-error>
+                <mat-error *ngIf="appointmentForm.get('date').hasError('date')">
+                    Bitte geben Sie eine gültige date ein
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="flex flex-auto w-full">
+            <mat-form-field appearance="fill" class="w-full">
+                <mat-label>Time start</mat-label>
+                <input matInput [ngxTimepicker]="startPicker" [(ngModel)]="startTime" name="startTime"
+                    formControlName="startTime" [format]="24" readonly>
+                <ngx-material-timepicker #startPicker [format]="24"></ngx-material-timepicker>
+                <mat-error *ngIf="appointmentForm.get('startTime').hasError('required')">Time is
+                    erforderlich</mat-error>
+                <mat-error *ngIf="appointmentForm.get('startTime').hasError('time')">Bitte geben Sie eine
+                    gültige Zeit
+                    ein</mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="flex flex-auto w-full">
+            <mat-form-field appearance="fill" class="w-full">
+                <mat-label>Time end</mat-label>
+                <input matInput [ngxTimepicker]="endPicker" [(ngModel)]="endTime" name="endTime"
+                    formControlName="endTime" [format]="24" readonly>
+                <ngx-material-timepicker #endPicker [format]="24"></ngx-material-timepicker>
+                <mat-error *ngIf="appointmentForm.get('endTime').hasError('required')">Time is
+                    erforderlich</mat-error>
+                <mat-error *ngIf="appointmentForm.get('endTime').hasError('time')">Bitte geben Sie eine gültige
+                    Zeit
+                    ein</mat-error>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <p class="font-bold text-base py-3">Du hast nicht genug Guthaben.</p>
+            <button>Back</button>
+            <button [disabled]="appointmentForm.valid">Next</button>
+        </div>
+    </form>
+
+    <form [formGroup]="appointmentForm">
+        <p class="text-xl font-bold py-3">Your address</p>
+        <div class="flex">
+            <div class="w-[50%] block">
+                <div class="block w-full py-3">
+                    <mat-label>Wo findet es statt?</mat-label>
+                    <mat-radio-group aria-label="Select an option" class="mt-5 ml-5 block" formControlName="location">
+                        <mat-radio-button value="online">Online?</mat-radio-button>
+                        <mat-radio-button value="offline" class="ml-1">Präsent</mat-radio-button>
+                    </mat-radio-group>
+
+                </div>
+                <div class="block justify-center py-2">
+                    <mat-form-field appearance="fill" class="w-full">
+                        <mat-label>Address:</mat-label>
+                        <input matInput type="text" placeholder="Adresse" required formControlName="address" />
+                        <mat-error *ngIf="appointmentForm.get('address').hasError('required')">
+                            address is erforderlich
+                        </mat-error>
+                        <mat-error *ngIf="appointmentForm.get('address').hasError('city')">
+                            Bitte geben Sie eine gültige address ein
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="w-full">
+                        <mat-label>Stadt:</mat-label>
+                        <input matInput type="text" placeholder="Stadt" required formControlName="city" />
+                        <mat-error *ngIf="appointmentForm.get('city').hasError('required')">
+                            city is erforderlich
+                        </mat-error>
+                        <mat-error *ngIf="appointmentForm.get('city').hasError('city')">
+                            Bitte geben Sie eine gültige city ein
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill" class="w-full">
+                        <mat-label>Notizen</mat-label>
+                        <textarea matInput placeholder="Notizen" required formControlName="note"></textarea>
+                        <mat-error *ngIf="appointmentForm.get('note').hasError('required')">
+                            note is erforderlich
+                        </mat-error>
+                        <mat-error *ngIf="appointmentForm.get('note').hasError('note')">
+                            Bitte geben Sie eine gültige note ein
+                        </mat-error>
+                    </mat-form-field>
+
+                </div>
+            </div>
+
+            <!-- <div class="map-container">
+                <div id="map"></div>
+            </div> -->
+
+        </div>
+
+        <div>
+            <button>Back</button>
+            <button [disabled]="appointmentForm.valid">Next</button>
+        </div>
+    </form>
+
+    <form [formGroup]="appointmentForm">
+        <div class="block justify-center py-2">
+            <p class="text-xl font-bold py-3">Your topic</p>
+            <mat-form-field appearance="fill" class="w-full">
+                <mat-label>Thema?</mat-label>
+                <input matInput type="text" placeholder="Thema" required formControlName="topic" />
+                <mat-error *ngIf="appointmentForm.get('topic').hasError('required')">
+                    topic is erforderlich
+                </mat-error>
+                <mat-error *ngIf="appointmentForm.get('topic').hasError('topic')">
+                    Bitte geben Sie eine gültige topic ein
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="w-full">
+                <mat-label>Wofur</mat-label>
+                <input matInput type="text" placeholder="Wofur" required formControlName="purpose" />
+                <mat-error *ngIf="appointmentForm.get('purpose').hasError('required')">
+                    purpose is erforderlich
+                </mat-error>
+                <mat-error *ngIf="appointmentForm.get('purpose').hasError('purpose')">
+                    Bitte geben Sie eine gültige purpose ein
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="block w-full py-3">
+            <mat-radio-group aria-label="Select an option" class="mt-5 ml-5 block">
+                <mat-radio-button value="true">Privat oder</mat-radio-button>
+                <mat-radio-button value="false" class="ml-1">Arbeit</mat-radio-button>
+            </mat-radio-group>
+        </div>
+        <div>
+            <button>Back</button>
+            <button [disabled]="appointmentForm.valid">Next</button>
+        </div>
+    </form>
+
+    <form [formGroup]="appointmentForm" (ngSubmit)="schedule()">
+        <div class="block justify-center py-2">
+            <p class="text-xl font-bold py-3">List of interpreters</p>
+        </div>
+
+        <div class="mt-4">
+            <mat-checkbox required formControlName="confirmation">
+                I confirm that the information provided is accurate.
+            </mat-checkbox>
+        </div>
+
+        <div>
+            <button>Back</button>
+            <button type="submit" [disabled]="!appointmentForm.valid">Done</button>
+        </div>
+    </form>
+
+</div>

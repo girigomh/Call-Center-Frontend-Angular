@@ -1,0 +1,189 @@
+<div class="w-full max-w-3xl">
+
+    <!-- Form -->
+    <form [formGroup]="notificationsForm">
+
+        <!-- Section -->
+        <div class="w-full text-xl">Benachrichtigungen</div>
+        <div class="grid grid-cols-1 gap-6 w-full mt-8" *ngIf="userType === 'COMPANYLEADER' ||'ADMIN'">
+            <!-- Communication -->
+            <div class="flex items-center justify-between">
+                <div class="flex-auto cursor-pointer" (click)="communication.toggle()">
+                    <div class="leading-6 font-medium">Kommunikation</div>
+                    <div class="text-md text-secondary">Erhalte Neuigkeiten, Ankündigungen und Produktaktualisierungen.
+                    </div>
+                </div>
+                <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'communication'" #communication>
+                </mat-slide-toggle>
+            </div>
+            <!-- Security -->
+            <div class="flex items-center justify-between">
+                <div class="flex-auto cursor-pointer" (click)="securityToggle.toggle()">
+                    <div class="leading-6 font-medium">Sicherheit</div>
+                    <div class="text-md text-secondary">
+                        Wichtige Benachrichtigungen zur Sicherheit Ihres Kontos erhalten.
+                    </div>
+                </div>
+                <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'security'" #securityToggle>
+                </mat-slide-toggle>
+            </div>
+            <!-- Meetups -->
+            <div class="flex items-center justify-between">
+                <div class="flex-auto cursor-pointer" (click)="meetupsToggle.toggle()">
+                    <div class="leading-6 font-medium">Treffen</div>
+                    <div class="text-md text-secondary">
+                        Erhalten Sie eine E-Mail, wenn ein Treffen in meiner Nähe veröffentlicht wird
+                    </div>
+                </div>
+                <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'meetups'" #meetupsToggle>
+                </mat-slide-toggle>
+            </div>
+            <!-- <div class="flex items-center justify-between">
+                <div class="flex-auto cursor-pointer" (click)="meetupsToggle.toggle()">
+                    <div class="leading-6 font-medium">Make your profile</div>
+                    <div class="text-md text-secondary">
+                        Everyone can see your profile when it is public
+                    </div>
+                </div>
+                <span>Private</span>
+                <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'profileVisibality'"
+                    #profileVisibalityToggle>
+                </mat-slide-toggle>
+                <span>Public</span>
+            </div> -->
+        </div>
+
+        <!-- Divider -->
+        <div class="my-10 border-t"></div>
+
+        <!-- Section -->
+        <div class="w-full text-xl">Kontoaktivität</div>
+        <div class="w-full mt-8 text-lg font-bold">Schicken Sie mir eine E-Mail, wenn:</div>
+        <div class="grid grid-cols-1 gap-4 w-full mt-4" *ngIf="userType === 'COMPANYLEADER' ||'ADMIN'">
+
+            <!-- <div class="flex items-center justify-between">
+                <div class="flex-auto leading-6 cursor-pointer" (click)="mention.toggle()">
+                    Notify me for payment systems
+                </div>
+                <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'mention'" #mention>
+                </mat-slide-toggle>
+            </div> -->
+
+            <div class="flex items-center justify-between">
+                <div class="flex-auto leading-6 cursor-pointer" (click)="toggleNotification('videoCall')">
+                    Benachrichtigen Sie mich, wenn jemand einen Videotelefonanruf tätigt
+                </div>
+                <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'communication'" #mention>
+                </mat-slide-toggle>
+            </div>
+
+            <!-- Notification -->
+            <div class="flex items-center justify-between">
+                <div class="flex-auto leading-6 cursor-pointer" (click)="toggleNotification('logIn')">
+                    Ich möchte benachrichtigt werden, wenn ich mich einlogge.
+                </div>
+                <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'security'" #comments>
+                </mat-slide-toggle>
+            </div>
+            <div class="flex items-center justify-between">
+                <div class="flex-auto leading-6 cursor-pointer" (click)="toggleNotification('appointment')">
+                    Ich möchte benachrichtigt werden, wenn ich Terminvorschlage von Kunden bekomme.
+                </div>
+                <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'inquiry'" #comments>
+                </mat-slide-toggle>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <div class="flex-auto leading-6 cursor-pointer" (click)="comments.toggle()">
+                    Möchte ich bei eingehenden Anrufen benachrichtigt werden?
+                </div>
+                <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'comments'" #comments>
+                </mat-slide-toggle>
+            </div>
+
+        </div>
+        <div class="my-6 border-t"></div>
+        <div class="w-full text-xl mt-8">Benachrichtigung</div>
+        <div class="w-full mt-5 font-medium">Klingelton:</div>
+        <div>Welchen Klingelton möchte ich auswählen, um bei einem eingehenden Anruf abgespielt zu werden?</div>
+        <div class="flex items-center justify-between">
+            <select class=" bg-gray-200 py-2 rounded-lg" [formControlName]="'comments'">
+                <option value="all">Ringing 1</option>
+                <option value="verified">Ringing 2</option>
+                <option value="verified">Ringing 3</option>
+            </select>
+        </div>
+
+        <div class="w-full mt-5 font-medium">Benachrichtigungston:</div>
+        <div>Welchen Benachrichtigungston möchte ich auswählen, um bei einer neuen Nachricht abgespielt zu werden?</div>
+        <div class="flex items-center justify-between py-3">
+            <select class=" bg-gray-200 py-2 rounded-lg" [formControlName]="'comments'">
+                <option value="all">Ringing 1</option>
+                <option value="verified">Ringing 2</option>
+                <option value="verified">Ringing 3</option>
+            </select>
+        </div>
+        <div class="leading-6 font-medium">Popup-Benachrichtigungen:</div>
+        <div class="flex items-center justify-between">
+            <div class="flex-auto leading-6 cursor-pointer" (click)="comments.toggle()">
+                Möchte ich Popup-Benachrichtigungen auf dem Bildschirm angezeigt bekommen, wenn ein Anruf oder eine
+                Nachricht eingeht?
+            </div>
+            <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'comments'" #comments>
+            </mat-slide-toggle>
+        </div>
+
+        <div class="leading-6 font-medium pt-3">Stummschalten:</div>
+        <div class="flex items-center justify-between">
+            <div class="flex-auto leading-6 cursor-pointer" (click)="comments.toggle()">
+                Möchte ich einstellen, dass das Gerät stummgeschaltet wird, wenn ein Anruf oder eine Nachricht eingeht?
+            </div>
+            <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'comments'" #comments>
+            </mat-slide-toggle>
+        </div>
+        <div class="leading-6 font-medium pt-3">Benachrichtigungs-LED:</div>
+        <div class="flex items-center justify-between">
+            <div class="flex-auto leading-6 cursor-pointer" (click)="comments.toggle()">
+                Möchte ich einstellen, dass die LED blinkt, wenn ein Anruf oder eine Nachricht eingeht, sofern das Gerät
+                über eine
+                LED-Statusanzeige verfügt?
+            </div>
+            <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'comments'" #comments>
+            </mat-slide-toggle>
+        </div>
+
+        <div class="leading-6 font-medium pt-3">Benachrichtigung während des Telefonats:</div>
+        <div class="flex items-center justify-between">
+            <div class="flex-auto leading-6 cursor-pointer" (click)="comments.toggle()">
+                Möchte ich Benachrichtigungen über eingehende Anrufe oder Nachrichten während eines laufenden Gesprächs
+                erhalten oder
+                nicht?
+            </div>
+            <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'comments'" #comments>
+            </mat-slide-toggle>
+        </div>
+
+        <div class="leading-6 font-medium pt-3">Benachrichtigung:</div>
+        <div class="flex items-center justify-between">
+            <div class="flex-auto leading-6 cursor-pointer" (click)="comments.toggle()">
+                Wie möchte ich über neue Terminvorschläge benachrichtigt werden, beispielsweise per E-Mail, SMS oder
+                Push-Benachrichtigung in der App?
+            </div>
+            <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'comments'" #comments>
+            </mat-slide-toggle>
+        </div>
+
+        <!-- Divider -->
+        <div class="my-10 border-t"></div>
+
+        <!-- Actions -->
+        <div class="flex items-center justify-end">
+            <button mat-stroked-button type="button">
+                Cancel
+            </button>
+            <button class="ml-4" mat-flat-button type="button" color="'primary'">Save
+            </button>
+        </div>
+    </form>
+
+</div>

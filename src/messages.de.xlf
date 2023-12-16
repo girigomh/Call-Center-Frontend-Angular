@@ -1,0 +1,4 @@
+<trans-unit id="start a call">
+    <source>Start a call</source>
+    <target>Ein Anruf starten</target> <!-- German translation -->
+</trans-unit>

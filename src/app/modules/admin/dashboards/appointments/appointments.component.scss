@@ -1,0 +1,13 @@
+.map_container {
+  max-height: 550px;
+  height: 100%;
+  border: 1px solid rgb(10, 10, 11);
+  width: 90% !important;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+#map {
+  height: 80vh;
+  width: 100%;
+}

@@ -1,0 +1,6 @@
+{
+  "/api": {
+    "target": "https://85.190.254.23:9443",
+    "secure": false
+  }
+}

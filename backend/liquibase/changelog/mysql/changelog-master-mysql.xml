@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    
+	<changeSet id="sequence-create-mysql" author="Nick">
+		<sqlFile relativeToChangelogFile="true" path="sequence-create-mysql.sql"/>
+    </changeSet>
+    <changeSet id="first-create" author="Nick">
+        <sqlFile relativeToChangelogFile="true" path="first-create-mysql.sql"/>
+    </changeSet>
+    <changeSet id="base-users" author="Nick">
+        <sqlFile relativeToChangelogFile="true" path="insert-base-users-mysql.sql"/>
+    </changeSet>
+    <changeSet id="nick-user" author="Nick">
+        <sqlFile relativeToChangelogFile="true" path="insert-nick-user-mysql.sql"/>
+    </changeSet>
+    <changeSet id="after-base-users" author="Nick">
+        <sqlFile relativeToChangelogFile="true" path="insert-after-base-users-mysql.sql"/>
+    </changeSet>
+</databaseChangeLog>

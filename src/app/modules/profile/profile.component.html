@@ -1,0 +1,427 @@
+<div class="flex flex-col w-full">
+
+    <!-- View mode -->
+    <ng-container *ngIf="!editMode">
+
+        <!-- Header -->
+        <div class="relative w-full h-40 sm:h-48 px-8 sm:px-12 bg-accent-100 dark:bg-accent-700">
+            <!-- Background -->
+            <ng-container *ngIf="accountData.background">
+                <img class="absolute inset-0 object-cover w-full h-full" [src]="accountData.background">
+            </ng-container>
+            <!-- Close button -->
+
+        </div>
+        <div class="flex items-center justify-end w-full max-w-3xl mx-auto pt-6">
+            <!-- <a mat-icon-button [matTooltip]="'Change profile pic'" (click)="titlePic.click()"> -->
+            <!-- <mat-icon class="text-white" [svgIcon]="'heroicons_outline:camera'"></mat-icon> -->
+            <!-- </a> -->
+            <input type="file" class="hidden" #titlePic name="titlePic" id="titlePic"
+                accept="image/jpeg,image/png, image/jpg" (change)="handleImageUpload($event)">
+        </div>
+
+
+        <!-- userData -->
+        <div class="relative flex flex-col flex-auto items-center p-6 pt-0 sm:p-12 sm:pt-0">
+            <div class="w-full max-w-3xl">
+
+                <!-- Avatar and actions -->
+                <div class="flex flex-auto items-end -mt-16">
+                    <!-- Avatar -->
+                    <div *ngIf="accountData.avatar"
+                        class="flex items-center justify-center w-32 h-32 rounded-full overflow-hidden ring-4 ring-bg-card">
+                        <img class="object-cover w-full h-full" *ngIf="accountData.avatar" [src]="accountData.avatar">
+                        <div class="flex items-center justify-center w-full h-full rounded overflow-hidden uppercase text-8xl font-bold leading-none bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200"
+                            *ngIf="!accountData.avatar">
+                            {{userProfileData.name.charAt(0)}}
+                        </div>
+                    </div>
+                    <div class="px-4" *ngIf="userProfileData">
+                        <h2 class="font-bold pb-3 text-xl">{{ userProfileData.name}}</h2>
+                        <p class="text-lg font-medium">{{ userProfileData.country}}</p>
+                    </div>
+                    <!-- Actions -->
+                    <div class="flex items-center ml-auto mb-1">
+                        <button mat-stroked-button (click)="toggleEditMode(true)">
+                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
+                            <span class="ml-2" i18n="@@edit">Edit</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Name -->
+                <ng-container *ngIf="userData.firstName || userData.lastName">
+                    <div class="mt-3 text-2xl font-bold truncate">
+                        {{userData.firstName}} {{userData.lastName}}</div>
+                </ng-container>
+
+                <!-- Tags -->
+                <!-- <ng-container>
+                    <div class="flex flex-wrap items-center mt-2">
+                        Tag
+                        <ng-container *ngFor="let tag of (userData.tags | fuseFindByKey:'id':tags); trackBy: trackByFn">
+                            <div
+                                class="flex items-center justify-center py-1 px-3 mr-3 mb-3 rounded-full leading-normal text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">
+                                <span class="text-sm font-medium whitespace-nowrap">{{tag.title}}</span>
+                            </div>
+                        </ng-container>
+                    </div>
+                </ng-container> -->
+
+            </div>
+
+            <div class="lg:flex flex-wrap justify-center w-full gap-6 pt-14">
+                <div class="border-t space-y-4 box-border py-4 bg-white rounded-xl border-b-4 lg:w-[40%] w-[98%] px-4"
+                    *ngIf="userProfileData">
+                    <span class="font-bold text-xl text-center"><ng-container i18n="@@about me">Über mich</ng-container>
+                    </span>
+                    <p>{{ userProfileData.about }}</p>
+                    <div class="mt-4 pt-6 border-t space-y-8 w-full"></div>
+                    <div class="flex gap-2 text-lg">
+                        <mat-icon class="icon-size-8">place</mat-icon>
+                        <p class="py-1">{{userProfileData.country}}</p>
+                    </div>
+                    <div class="flex gap-2 text-lg">
+                        <mat-icon class="icon-size-8">computer</mat-icon>
+                        <p class="py-1">{{userProfileData.title}}</p>
+                    </div>
+                    <div class="flex gap-2 text-lg">
+                        <mat-icon class="icon-size-8">language</mat-icon>
+                        <p class="py-1">{{userProfileData.language}}</p>
+                    </div>
+                    <div class="text-center py-9">
+                        <a routerLink="/dashboard">
+                            <button
+                                class="rounded-xl text-base bg-gray-800 text-white w-36 py-2 hover:bg-gray-200 hover:text-blue-400">
+                                Meine Biografie anzeigen</button>
+                        </a>
+                    </div>
+                </div>
+
+                <div
+                    class="max-w-3xl gap-3 flex flex-col border-t box-border bg-white rounded-xl border-b-4 w-full px-4 py-12">
+                    <!-- Title -->
+                    <ng-container *ngIf="userData.userType">
+                        <div class="flex sm:items-center">
+                            <mat-icon [svgIcon]="'heroicons_outline:user'"></mat-icon>
+                            <div class="ml-6 leading-6">{{userData.profile.name | titlecase}}</div>
+                        </div>
+                    </ng-container>
+
+                    <!-- Phone -->
+                    <ng-container *ngIf="userData.phoneNumber">
+                        <div class="flex">
+                            <mat-icon [svgIcon]="'heroicons_outline:phone'"></mat-icon>
+                            <div class="min-w-0 ml-6 space-y-1">
+                                <div class="flex items-center leading-6">
+                                    <!-- <div class="hidden sm:flex w-6 h-4 overflow-hidden"
+                                                            [matTooltip]="getCountryByIso(userData.phoneNo.country)?.name"
+                                                            [style.background]="'url(\'/assets/images/apps/contacts/flags.png\') no-repeat 0 0'"
+                                                            [style.backgroundSize]="'24px 3876px'"
+                                                            [style.backgroundPosition]="getCountryByIso(userData.phoneNo.country)?.flagImagePos">
+                                                        </div> -->
+                                    <!-- <div class="font-mono">
+                                        {{getCountryByIso(userData.phoneNo.country)?.code}}
+                                    </div> -->
+                                    <a [href]="'tel:'+userData.phoneNumber" class="font-mono text-sky-400">{{userData.phoneNumber}}</a>
+                                    <!-- <div class="text-md truncate text-secondary" *ngIf="phoneNo.label">
+                                                            <span class="mx-2">&bull;</span>
+                                                            <span class="font-medium">{{phoneNo.label}}</span>
+                                                        </div> -->
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+
+                    <!-- Address -->
+                    <ng-container
+                        *ngIf="userData.houseNo || userData.street || userData.city || userData.zip || userData.state || userData.country">
+                        <div class="flex sm:items-center">
+                            <mat-icon [svgIcon]="'heroicons_outline:location-marker'"></mat-icon>
+                            <div class="ml-6 leading-6">{{userData.houseNo}}, {{userData.street}},
+                                {{userData.city}},
+                                {{userData.zip}}, {{userData.state}}, {{userData.country}}</div>
+                        </div>
+                    </ng-container>
+
+                    <!-- Birthday -->
+                    <ng-container *ngIf="userData.dob">
+                        <div class="flex sm:items-center">
+                            <mat-icon [svgIcon]="'heroicons_outline:cake'"></mat-icon>
+                            <div class="ml-6 leading-6">{{userData.dob}}</div>
+                        </div>
+                    </ng-container>
+
+                    <!-- Email -->
+                    <ng-container *ngIf="userData.email">
+                        <div class="flex">
+                            <mat-icon [svgIcon]="'heroicons_solid:mail'"></mat-icon>
+                            <a [href]="'mailto:'+userData.email" class="max-w-none text-sky-400 ml-6 prose prose-sm" >{{userData.email}}</a>
+                        </div>
+                    </ng-container>
+
+                    <!-- Notes -->
+                    <ng-container *ngIf="userData.notes">
+                        <div class="flex">
+                            <mat-icon [svgIcon]="'heroicons_outline:menu-alt-2'"></mat-icon>
+                            <div class="max-w-none ml-6 prose prose-sm" [innerHTML]="userData.notes"></div>
+                        </div>
+                    </ng-container>
+
+                </div>
+            </div>
+
+        </div>
+    </ng-container>
+
+    <!-- Edit mode -->
+    <ng-container *ngIf="editMode">
+
+        <!-- Header -->
+
+        <div class="relative w-full h-40 sm:h-48 px-8 sm:px-12 bg-accent-100 dark:bg-accent-700">
+            <!-- Background -->
+            <ng-container *ngIf="userData.background">
+                <img class="absolute inset-0 object-cover w-full h-full" [src]="userData.background">
+            </ng-container>
+        </div>
+
+        <!-- userData form -->
+        <div class="relative flex flex-col flex-auto items-center px-6 sm:px-12">
+            <div class="w-full max-w-3xl">
+                <form [formGroup]="contactForm">
+
+                    <!-- Avatar -->
+                    <div class="flex flex-auto items-end -mt-16">
+                        <div
+                            class="relative flex items-center justify-center w-32 h-32 rounded-full overflow-hidden ring-4 ring-bg-card">
+                            <!-- Upload / Remove avatar -->
+                            <div class="absolute inset-0 bg-black bg-opacity-50 z-10"></div>
+                            <div class="absolute inset-0 flex items-center justify-center z-20">
+                                <div>
+                                    <!-- <input type="file" class="hidden" #titlePic name="titlePic" id="titlePic"
+                                        accept="image/jpeg,image/png, image/jpg" (change)="handleImageUpload($event)"> -->
+                                    <input id="avatar-file-input"
+                                        class="absolute h-0 w-0 opacity-0 invisible pointer-events-none" type="file"
+                                        [multiple]="false" [accept]="'image/jpeg, image/png'"
+                                        (change)="handleImageUpload($event)" #avatarFileInput>
+                                    <label
+                                        class="flex items-center justify-center w-10 h-10 rounded-full cursor-pointer hover:bg-hover"
+                                        for="avatar-file-input" matRipple>
+                                        <mat-icon class="text-white" [svgIcon]="'heroicons_outline:camera'"></mat-icon>
+                                    </label>
+                                </div>
+                                <div>
+                                    <button mat-icon-button (click)="removeAvatar()">
+                                        <mat-icon class="text-white" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Image/Letter -->
+                            <img class="object-cover w-full h-full" *ngIf="userData.avatar" [src]="userData.avatar">
+                            <div class="flex items-center justify-center w-full h-full rounded overflow-hidden uppercase text-8xl font-bold leading-none bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200"
+                                *ngIf="!userData.avatar">
+                                {{userData?.firstName?.charAt(0)}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Name -->
+                    <!-- <div class="mt-8 flex gap-5">
+                        <mat-form-field class="to-warn-500">
+                            <mat-label i18n="@@signup.first.name">First Name</mat-label>
+                            <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                            <input matInput type="text" required [formContr1olName]="'firstName'"
+                                [placeholder]="'First Name'">
+                        </mat-form-field>
+
+                        <mat-form-field class="">
+                            <mat-label i18n="@@signup.last.name">Last Name</mat-label>
+                            <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                            <input matInput type="text" required [formControlName]="'lastName'"
+                                [placeholder]="'Last Name'">
+                        </mat-form-field>
+                    </div> -->
+                    <div class="grid grid-cols-2 gap-5">
+                        <mat-form-field class="to-warn-500">
+                            <mat-label i18n="@@signup.first.name">First Name</mat-label>
+                            <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                            <input matInput type="text" required [formControlName]="'firstName'"
+                                [placeholder]="'First Name'">
+                        </mat-form-field>
+                        <mat-form-field class="">
+                            <mat-label i18n="@@signup.last.name">Last Name</mat-label>
+                            <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:user-circle'"></mat-icon>
+                            <input matInput type="text" required [formControlName]="'lastName'"
+                                [placeholder]="'Last Name'">
+                        </mat-form-field>
+                        <mat-form-field class="" [subscriptSizing]="'dynamic'">
+                            <!-- <mat-label *ngIf="first">Email</mat-label> -->
+                            <mat-label>Email</mat-label>
+                            <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:mail'"></mat-icon>
+                            <input matInput name="username" type="email" [formControlName]="'username'" required="true"
+                                [placeholder]="'Email address'" [spellcheck]="false">
+                        </mat-form-field>
+                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                            <mat-label>Birthday</mat-label>
+                            <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:cake'"></mat-icon>
+                            <input matInput [matDatepicker]="birthdayDatepicker" formControlName="dob"
+                                [placeholder]="'Birthday'" [max]="maxDate">
+                            <mat-datepicker-toggle matSuffix [for]="birthdayDatepicker"></mat-datepicker-toggle>
+                            <mat-datepicker #birthdayDatepicker></mat-datepicker>
+                            <mat-error *ngIf="contactForm.get('dob').errors?.required">Birthday is
+                                required</mat-error>
+                            <mat-error *ngIf="contactForm.get('dob').errors?.minimumAge">
+                                Minimum age required is {{ contactForm.get('dob').errors?.minimumAge.requiredAge
+                                }}
+                            </mat-error>
+                        </mat-form-field>
+                        <div class="w-full flex-auto">
+                            <mat-label><ng-container i18n="@@anmelden.als">Geschlecht :* </ng-container></mat-label>
+                            <!-- <h3 class="font-semibold">Geschlecht :*</h3> -->
+                            <mat-radio-group aria-label="Select an option" [formControlName]="'gender'">
+                                <mat-radio-button value="M">Männlich</mat-radio-button>
+                                <mat-radio-button value="F" class="ml-1">Weiblich</mat-radio-button>
+                                <mat-radio-button value="O" class="ml-1">andere</mat-radio-button>
+                                <mat-error
+                                    *ngIf="!contactForm.get('gender').untouched && contactForm.get('gender').hasError('required')">
+                                    <ng-container>gender is required</ng-container>
+                                </mat-error>
+                            </mat-radio-group>
+                            <!-- <mat-error
+                                *ngIf="!signUpForm.get('gender').untouched && signUpForm.get('gender').hasError('required')">
+                                <ng-container>gender is required</ng-container>
+                            </mat-error> -->
+                        </div>
+                        <mat-form-field class="flex-auto">
+                            <mat-label><ng-container i18n="@@street">street</ng-container></mat-label>
+                            <input id="Street-confirm" matInput [formControlName]="'street'" />
+                            <mat-error *ngIf="contactForm.get('street').hasError('required')">
+                                <ng-container i18n="@@street.required">street required</ng-container>
+                            </mat-error>
+                            <mat-error *ngIf="contactForm.get('street').hasError('street')">
+                                Bitte geben Sie eine gültige Straße ein
+                            </mat-error>
+                        </mat-form-field>
+                        <!-- House Number field -->
+                        <mat-form-field class="flex-auto">
+                            <mat-label><ng-container i18n="@@house.number">number</ng-container></mat-label>
+                            <input id="house-number-confirm" matInput type="number" [formControlName]="'houseNo'" />
+                            <mat-error *ngIf="contactForm.get('houseNo').hasError('required')">
+                                <ng-container i18n="@@house.number.required">house number required</ng-container>
+                            </mat-error>
+                            <mat-error *ngIf="contactForm.get('houseNo').hasError('houseNo')">
+                                Bitte geben Sie eine gültige Hausnummer ein
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="flex-auto">
+                            <mat-label><ng-container i18n="@@zip">zip</ng-container></mat-label>
+                            <input id="zip-confirm" matInput type="text" [formControlName]="'zip'" />
+                            <mat-error *ngIf="contactForm.get('zip').hasError('required')">
+                                <ng-container i18n="@@zip.required">zip required</ng-container>
+                            </mat-error>
+                            <mat-error *ngIf="contactForm.get('zip').hasError('zip')">
+                                Bitte geben Sie eine gültige Postleitzahl ein
+                            </mat-error>
+                        </mat-form-field>
+                        <!-- Location field -->
+                        <mat-form-field class="flex-auto">
+                            <mat-label><ng-container i18n="@@Location">Location</ng-container></mat-label>
+                            <input id="location-confirm" matInput [formControlName]="'location'" /><mat-icon>
+                                location_on</mat-icon>
+                            <mat-error *ngIf="contactForm.get('location').hasError('required')">
+                                <ng-container i18n="@@location.required">Location required</ng-container>
+                            </mat-error>
+                            <mat-error *ngIf="contactForm.get('location').hasError('location')">
+                                Bitte geben Sie eine gültige Ort ein
+                            </mat-error>
+                        </mat-form-field>
+                        <!-- country field -->
+                        <mat-form-field class="flex-auto">
+                            <mat-label><ng-container i18n="@@country">Country</ng-container></mat-label>
+                            <mat-select [formControlName]="'country'" #country placeholder="Country" name="country"
+                                (ngModelChange)="getCountryName($event)">
+                                <mat-option *ngFor="let country of countryValue" [value]="country.CountryName">
+                                    {{ country.CountryName }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="contactForm.get('country').hasError('required')">
+                                <ng-container i18n="@@country.required">Country required</ng-container>
+                            </mat-error>
+                            <mat-error *ngIf="contactForm.get('country').hasError('country')">
+                                Bitte geben Sie ein gültiges Land ein
+                            </mat-error>
+                        </mat-form-field>
+                        <!-- country field -->
+
+                        <!-- state field -->
+                        <mat-form-field class="flex-auto">
+                            <mat-label><ng-container i18n="@@state">state</ng-container></mat-label>
+                            <mat-select [formControlName]="'state'" #state placeholder="{{placeholder?.state}}"
+                                name="state">
+                                <mat-option *ngFor="let state of states" [value]="state">
+                                    {{ state }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="contactForm.get('state').hasError('required')">
+                                <ng-container i18n="@@state?.required">State required</ng-container>
+                            </mat-error>
+                            <mat-error *ngIf="contactForm.get('state').hasError('state')">
+                                Bitte geben Sie einen gültigen Status ein
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field class="flex-auto">
+                            <mat-label>Phone number</mat-label>
+                            <input matInput type="tel" [formControlName]="'phoneNumber'" [placeholder]="'Phone'"
+                                required="true">
+                        </mat-form-field>
+                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                            <mat-label i18n="@@profile.usertype">Title</mat-label>
+                            <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:briefcase'"></mat-icon>
+                            <input matInput name="userType" type="text" required="true"
+                                [formControlName]="'profile'" [placeholder]="'Job title'" readonly>
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Notes -->
+                    <div class="mt-8">
+                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                            <mat-label>Notes</mat-label>
+                            <mat-icon matPrefix class="hidden sm:flex icon-size-5"
+                                [svgIcon]="'heroicons_solid:menu-alt-2'"></mat-icon>
+                            <textarea matInput name="notes" [formControlName]="'notes'" [placeholder]="'Notes'"
+                                [rows]="5" [spellcheck]="false" cdkTextareaAutosize></textarea>
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Actions -->
+                    <div
+                        class="flex items-center mt-10 -mx-6 sm:-mx-12 py-4 pr-4 pl-1 sm:pr-12 sm:pl-7 border-t bg-gray-50 dark:bg-transparent">
+                        <!-- Delete -->
+                        <!-- <button mat-button [color]="'warn'" [matTooltip]="'Delete'" (click)="deleteContact()">
+                            Delete
+                        </button> -->
+                        <!-- Cancel -->
+                        <button class="ml-auto" mat-button [matTooltip]="'Cancel'" (click)="toggleEditMode(false)">
+                            Cancel
+                        </button>
+                        <!-- Save -->
+                        <button class="ml-2" mat-flat-button [color]="'primary'" [matTooltip]="'Save'"
+                            (click)="updateContact()" [disabled]="!editMode" >
+                            Save
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </ng-container>
+</div>

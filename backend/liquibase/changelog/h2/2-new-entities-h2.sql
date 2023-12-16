@@ -1,0 +1,5 @@
+create table captioners (sms_certification boolean, bank_data varchar(255), certification boolean, link_for_video_call varchar(255), location_online varbinary(255), payment_interval varbinary(255), topic_knowledge varbinary(255), user_id bigint not null, primary key (user_id));
+create table communication_assistance (sms_certification boolean, bank_data varchar(255), certification boolean, link_for_video_call varchar(255), location_online varbinary(255), payment_interval varbinary(255), topic_knowledge varbinary(255), user_id bigint not null, primary key (user_id));
+
+alter table captioners add constraint FK_captioners__user_id foreign key (user_id) references users;
+alter table communication_assistance add constraint FK_communication_assistance__user_id foreign key (user_id) references users;
