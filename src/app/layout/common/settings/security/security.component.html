@@ -1,0 +1,138 @@
+<div class="w-full max-w-3xl">
+
+    <form [formGroup]="changeEmailForm">
+        <div class="w-full">
+            <div class="text-xl">Ändere dein Email</div>
+            <div class="text-secondary">Sie können Ihre E-Mail-Adresse nur einmal innerhalb von 1 Monat ändern!</div>
+        </div>
+        <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+            <!-- Current password -->
+            <div class="sm:col-span-4">
+                <mat-form-field class="w-full" subscriptSizing="'dynamic'">
+                    <!-- <mat-label>Ändern Sie die E-Mail</mat-label> -->
+                    <mat-label>Eingabe der alten E-Mail</mat-label>
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:mail'" matPrefix></mat-icon>
+                    <input [formControlName]="'newEmail'" type="email" matInput placeholder="Eingabe der alten E-Mail">
+                    <mat-error *ngIf="changeEmailForm.get('newEmail').hasError('required')">
+                        Please Enter valid e-mail address
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-4">
+                <mat-form-field class="w-full" subscriptSizing="'dynamic'">
+                    <mat-label>Eingabe der neuen E-Mail</mat-label>
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:mail'" matPrefix></mat-icon>
+                    <input [formControlName]="'newEmail'" type="email" matInput placeholder="Eingabe der neuen E-Mail">
+                    <mat-error *ngIf="changeEmailForm.get('newEmail').hasError('required')">
+                        Please Enter valid e-mail address
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="sm:col-span-4">
+            <button mat-button (click)="requestEmailChange()">E-Mail ändern</button>
+        </div>
+
+    </form>
+    <!-- Divider -->
+    <div class="my-10 border-t"></div>
+
+
+    <!-- Form -->
+    <form [formGroup]="changePasswordForm">
+
+        <!-- Section -->
+        <div class="w-full">
+            <div class="text-xl">Ändere dein Passwort</div>
+            <div class="text-secondary">Du kannst dein Passwort nur zweimal innerhalb von 24 Stunden ändern!</div>
+        </div>
+        <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+            <!-- Current password -->
+            <div class="sm:col-span-4">
+                <mat-form-field class="w-full" subscriptSizing="'dynamic'">
+                    <mat-label>Aktuelles Passwort</mat-label>
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:key'" matPrefix></mat-icon>
+                    <input [formControlName]="'currentPassword'" type="password" matInput>
+                </mat-form-field>
+            </div>
+            <!-- New password -->
+            <div class="sm:col-span-4">
+                <mat-form-field class="w-full" subscriptSizing="'dynamic'">
+                    <mat-label>Neues Passwort</mat-label>
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:key'" matPrefix></mat-icon>
+                    <input [formControlName]="'newPassword'" type="password" matInput>
+                </mat-form-field>
+                <div class="mt-1 text-md text-hint">Mindestens 8 Zeichen. Muss Zahlen, Buchstaben und Sonderzeichen
+                    enthalten.</div>
+            </div>
+        </div>
+        <div class="sm:col-span-4 pt-2">
+            <button mat-button (click)="togglePasswordChange()" class="bg-primary-700">Passwort ändern</button>
+        </div>
+
+    </form>
+
+    <!-- Divider -->
+    <div class="my-10 border-t"></div>
+
+    <!--Security Settings-->
+    <!-- <form [formGroup]="updateTwoFactorForm">
+        <div class="pb-5">
+            <h2 class="leading-6 text-2xl">Sicherheitseinstellungen</h2>
+            <p class="text-md text-secondary">
+                Halten Sie Ihr Konto mit den folgenden Einstellungen sicherer.
+            </p>
+        </div>
+
+        <div class="flex items-center justify-between pb-5">
+            <div class="flex-auto cursor-pointer" (click)="toggleTwoStep()">
+                <h3 class="leading-6 font-medium">Zweistufige Authentifizierung aktivieren.</h3>
+                <p class="text-md text-secondary">
+                    Schützt Sie vor Passwortdiebstahl, indem bei jeder Anmeldung ein Authentifizierungscode per SMS
+                    angefordert wird.
+                </p>
+            </div>
+            <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'twoStep'" #securityToggle>
+            </mat-slide-toggle>
+        </div>
+
+        <div *ngIf="updateTwoFactorForm.get('twoStep')?.value">
+            <h3 class="leading-6 font-medium">2-Schritt-Authentifizierung einrichten über</h3>
+            <form [formGroup]="twoStepForm">
+                <mat-form-field class="w-full">
+                    <mat-label>Telefonnummer</mat-label>
+                    <input formControlName="phoneNumber" type="tel" matInput>
+                </mat-form-field>
+
+                <div class="pb-4font-bold text-xl">Oder</div>
+                <mat-form-field class="w-full">
+                    <mat-label>E-Mail-Adresse</mat-label>
+                    <input formControlName="email" type="email" matInput>
+                </mat-form-field>
+            </form>
+        </div>
+
+        <div class="flex items-center justify-between pb-5">
+            <div class="flex-auto cursor-pointer" (click)="securityToggle.toggle()">
+                <h3 class="leading-6 font-medium">Bitten Sie alle 6 Monate um ein Passwortwechsel</h3>
+                <p class="text-md text-secondary">
+                    Eine einfache, aber effektive Methode, um sich vor Datenlecks und Passwortdiebstahl zu schützen
+                </p>
+            </div>
+            <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'askPasswordChange'" #securityToggle>
+            </mat-slide-toggle>
+        </div> -->
+    <!-- </form> -->
+
+    <!-- Actions -->
+    <div class="flex items-center justify-end pt-8">
+        <button mat-stroked-button type="button">
+            Abbrechen
+        </button>
+        <button class="ml-4" mat-flat-button type="button" [color]="'primary'">Speichern
+        </button>
+    </div>
+
+</div>

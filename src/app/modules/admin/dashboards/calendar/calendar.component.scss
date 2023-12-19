@@ -1,0 +1,61 @@
+h3 {
+  margin: 0 0 10px;
+}
+
+pre {
+  background-color: #f5f5f5;
+  padding: 15px;
+}
+
+// :host {
+//   display: block;
+//   width: 100%;
+//   // background-color: peachpuff;
+// }
+
+/* Add this to your component's CSS or a global stylesheet */
+// .cal-cell-highlight {
+//   background-color: #f7f7f7; /* Highlighted cell background color */
+//   border: 1px solid #ccc; /* Border for highlighted cells */
+// }
+
+.event-color {
+  color: rgb(56, 21, 21); /* Text color for event titles in highlighted cells */
+}
+
+// .cal-event {
+//   padding: 2px;
+//   border-radius: 4px;
+//   margin: 1px;
+//   color: rgb(127, 213, 220); /* Text color for event titles */
+// }
+
+/* CSS for bookmark button */
+.bookmark-button {
+  background-color: rgb(99, 183, 196);
+  border: none;
+  cursor: pointer;
+  color: rgb(239, 238, 238);
+  // width: 45px;
+  padding: 12px;
+  // padding-bottom: 8px;
+  border-radius: 45px;
+}
+
+/* CSS for bookmarked button */
+.bookmark-button.bookmarked {
+  color: #ff5722; /* Change color for bookmarked button */
+}
+/* CSS for event cell */
+// .cal-cell-bottom {
+//   /* Other styles */
+//   background-color: #fff; /* Default background color */
+// }
+
+/* CSS for event cell when bookmarked */
+.cal-cell-bottom.bookmarked {
+  background-color: #ff5722; /* Change background color for bookmarked events */
+}
+::ng-deep .active{
+  background-color: red;
+}

@@ -1,0 +1,57 @@
+/* ----------------------------------------------------------------------------------------------------- */
+/*  @ Import/write your custom styles here.
+/*  @ Styles from this file will override 'vendors.scss' and Fuse's base styles.
+/* ----------------------------------------------------------------------------------------------------- */
+
+body{
+  font-family: 'Inter';
+  overflow-x: hidden;
+}
+.mat-tab-group .mat-tab-body-content {
+  padding: 0;
+}
+.fuse-vertical-navigation-item-disabled {
+  display: none !important;
+}
+.timepicker-overlay {
+  z-index: 10000000 !important;
+}
+
+.timepicker-backdrop-overlay {
+  z-index: 10000000 !important;
+}
+.video-left-width{
+	width: 120px !important;
+	height: 120px !important;
+}
+.no-video-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.no-video-container-inner {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: #0F172A;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.no-video-container-inner span{
+color: #fff;
+  font-size: 110px;
+}
+.message-text{
+  font-size: 10px;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  font-weight: 700;
+}
+.message-text span{
+  font-size: 15px;
+  font-weight: 400;
+}

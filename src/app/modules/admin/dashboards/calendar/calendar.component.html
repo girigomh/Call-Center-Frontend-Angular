@@ -1,0 +1,181 @@
+<div class="w-full  ">
+  <div class="row text-center">
+    <div class="col-md-4">
+      <div class="btn-group py-4">
+        <div class="btn bg-slate-500 text-slate-100" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate"
+          (viewDateChange)="closeOpenMonthViewDay()">
+          Vorherige
+        </div>
+        <div class="btn bg-slate-200" mwlCalendarToday [(viewDate)]="viewDate">
+          Heute
+        </div>
+        <div class="btn bg-slate-500 text-slate-100" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate"
+          (viewDateChange)="closeOpenMonthViewDay()">
+          Nächster
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <h3 class="py-6 text-lg font-semibold">{{ viewDate | calendarDate:(view + 'ViewTitle'):'de' }}</h3>
+    </div>
+    <div class="col-md-4 ">
+      <div class="btn-group py-4">
+        <div class="btn  text-black border-slate-400" (click)="setView(CalendarView.Month)"
+          [class.bg-slate-600]="view === CalendarView.Month" [class.text-slate-200]="view === CalendarView.Month">
+          Monat
+        </div>
+        <div class="btn text-black border-slate-400" (click)="setView(CalendarView.Week)" [class.text-slate-200]="view === CalendarView.Week" [class.bg-slate-600]="view === CalendarView.Week">
+          Woche
+        </div>
+        <div class="btn  text-black border-slate-400" (click)="setView(CalendarView.Day)"
+          [class.bg-slate-600]="view === CalendarView.Day" [class.text-slate-200]="view === CalendarView.Day">
+          Tag
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div [ngSwitch]="view">
+    <mwl-calendar-month-view *ngSwitchCase="CalendarView.Month" [viewDate]="viewDate" [events]="events"
+      [weekStartsOn]="weekStartsOn" [refresh]="refresh" [activeDayIsOpen]="activeDayIsOpen"
+      (dayClicked)="dayClicked($event.day)" (eventClicked)="handleEvent('Clicked', $event.event)">
+    </mwl-calendar-month-view>
+    <mwl-calendar-week-view *ngSwitchCase="CalendarView.Week" [viewDate]="viewDate" [events]="events"
+      [refresh]="refresh" (eventClicked)="handleEvent('Clicked', $event.event)" [weekStartsOn]="1">
+    </mwl-calendar-week-view>
+    <mwl-calendar-day-view *ngSwitchCase="CalendarView.Day" [viewDate]="viewDate" [events]="events" [refresh]="refresh"
+      (eventClicked)="handleEvent('Clicked', $event.event)">
+    </mwl-calendar-day-view>
+  </div>
+  <!-- <div [ngSwitch]="view">
+                        <mwl-calendar-month-view *ngSwitchCase="CalendarView.Month" [viewDate]="viewDate" [events]="events"
+                          [refresh]="refresh" [weekStartsOn]="1" (dayClicked)="dayClicked($event.day)"
+                          (eventClicked)="handleEvent('Clicked', $event.event)" (eventTimesChanged)="eventTimesChanged($event)">
+                        </mwl-calendar-month-view>
+                        <mwl-calendar-week-view *ngSwitchCase="CalendarView.Week" [viewDate]="viewDate" [events]="events" [refresh]="refresh"
+                          (eventClicked)="handleEvent('Clicked', $event.event)" (eventTimesChanged)="eventTimesChanged($event)">
+                        </mwl-calendar-week-view>
+                        <mwl-calendar-day-view *ngSwitchCase="CalendarView.Day" [viewDate]="viewDate" [events]="events" [refresh]="refresh"
+                          (eventClicked)="handleEvent('Clicked', $event.event)" (eventTimesChanged)="eventTimesChanged($event)">
+                        </mwl-calendar-day-view>
+                      </div> -->
+
+  <!--Other Events-->
+  <div>
+    <div class="flex justify-between p-10">
+      <button class="rounded-lg py-3 w-22 bg-slate-500 text-white hover:bg-zinc-700"
+        [routerLink]="['/dashboard/appointments']">Add
+        event</button>
+    </div>
+
+    <!-- Add event form -->
+    <!-- <div *ngIf="showAddEventForm">
+
+      <form (ngSubmit)="saveEvent()">
+        <div class="form-group">
+          <label for="eventTitle">Event Title</label>
+          <input type="text" class="form-control" id="eventTitle" [(ngModel)]="newEventTitle"
+            [ngModelOptions]="{ standalone: true }" required>
+        </div>
+        <div class="form-group">
+          <label for="eventStart">Event Start Date and Time</label>
+          <input type="datetime-local" class="form-control" id="eventStart" [(ngModel)]="newEventStart"
+            [ngModelOptions]="{ standalone: true }" required>
+        </div>
+        <div class="form-group">
+          <label for="eventEnd">Event End Date and Time</label>
+          <input type="datetime-local" class="form-control" id="eventEnd" [(ngModel)]="newEventEnd"
+            [ngModelOptions]="{ standalone: true }" required>
+        </div>
+
+        <div>
+          <h2 class="font-bold my-1">Add colors</h2>
+          <div class="form-group flex flex-wrap w-80 py-2">
+            <button class="bg-red-700 w-22 rounded-lg py-4 text-white hover:bg-red-500"
+              (click)="selectColor('red')">Red</button>
+            <button class="bg-yellow-700 w-22 rounded-lg py-4 text-white hover:bg-yellow-500"
+              (click)="selectColor('yellow')">Yellow</button>
+            <button class="bg-blue-700 w-22 rounded-lg py-4 text-white hover:bg-blue-500"
+              (click)="selectColor('blue')">Blue</button>
+            <button class="bg-slate-700 w-22 rounded-lg py-4 text-white hover:bg-slate-500"
+              (click)="selectColor('slate')">Slate</button>
+            <button class="bg-violet-700 w-22 rounded-lg py-4 text-white hover:bg-violet-500"
+              (click)="selectColor('violet')">Violet</button>
+            <button class="bg-cyan-700 w-22 rounded-lg py-4 text-white hover:bg-cyan-500"
+              (click)="selectColor('cyan')">Cyan</button>
+            <button class="bg-amber-700 w-22 rounded-lg py-4 text-white hover:bg-amber-500"
+              (click)="selectColor('amber')">Amber</button>
+            <button class="bg-green-700 w-22 rounded-lg py-4 text-white hover:bg-green-500"
+              (click)="selectColor('green')">Green</button>
+            <button class="bg-orange-700 w-22 rounded-lg py-4 text-white hover:bg-orange-500"
+              (click)="selectColor('orange')">Orange</button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save Event</button>
+        <button type="button" class="btn btn-secondary" (click)="cancelEvent()">Cancel</button>
+      </form>
+    </div> -->
+    <!-- <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Primary color</th>
+            <th>Secondary + text color</th>
+            <th>Starts at</th>
+            <th>Ends at</th>
+            <th>Remove</th>
+          </tr>
+        </thead>
+    
+        <tbody>
+          <tr *ngFor="let event of events">
+            <td>
+              <input type="text" class="form-control" [(ngModel)]="event.title" (keyup)="refresh.next()" />
+            </td>
+            <td>
+              <input type="color" [(ngModel)]="event.color.primary" (change)="refresh.next()" />
+            </td>
+            <td>
+              <input type="color" [(ngModel)]="event.color.secondary" (change)="refresh.next()" />
+              <input type="color" [ngModel]="event.color.secondaryText ?? '#1e90ff'"
+                (ngModelChange)="event.color.secondaryText = $event" (change)="refresh.next()" />
+            </td>
+            <td>
+              <input class="form-control" type="text" mwlFlatpickr [(ngModel)]="event.start"
+                (ngModelChange)="refresh.next()" [altInput]="true" [convertModelValue]="true" [enableTime]="true"
+                dateFormat="Y-m-dTH:i" altFormat="F j, Y H:i" placeholder="Not set" />
+            </td>
+            <td>
+              <input class="form-control" type="text" mwlFlatpickr [(ngModel)]="event.end" (ngModelChange)="refresh.next()"
+                [altInput]="true" [convertModelValue]="true" [enableTime]="true" dateFormat="Y-m-dTH:i"
+                altFormat="F j, Y H:i" placeholder="Not set" />
+            </td>
+            <td>
+              <button class="btn btn-danger" (click)="deleteEvent(event)">
+                Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="addedEvents.length > 0">
+      <h2 class="font-bold my-1">Upcoming Events...</h2>
+      <div *ngFor="let addedEvent of addedEvents">
+        <div class="cal-event" [style.backgroundColor]="addedEvent.color">
+          <h3 class="text-xl font-bold text-white">{{ addedEvent.title }}</h3>
+          <button class="bookmark-button" [class.bookmarked]="event?.bookmarked" (click)="toggleBookmark(event)">
+            Bookmark
+          </button>
+          <div>{{ event?.bookmarked }}</div>
+
+        </div>
+      </div>
+    </div> -->
+  </div>
+
+
+</div>

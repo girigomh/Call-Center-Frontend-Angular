@@ -1,0 +1,120 @@
+<div
+    class="sm:relative w-full sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent">
+
+    <!-- Header -->
+    <div
+        class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-8 px-6 md:px-8 border-b">
+        <!-- Loader -->
+        <div class="absolute inset-x-0 bottom-0" *ngIf="isLoading">
+            <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
+        </div>
+        <!-- Title -->
+        <div class="text-4xl font-extrabold tracking-tight" i18n="@@customers.title">Customers</div>
+        <!-- Actions -->
+        <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
+            <!-- Search -->
+            <mat-form-field class="fuse-mat-dense fuse-mat-rounded search min-w-64" subscriptSizing="'dynamic'">
+                <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                <input matInput [formControl]="searchInputControl" ng-reflect-i18n-attr="placeholder"
+                    [autocomplete]="'off'" [placeholder]="searchPlaceHolder">
+            </mat-form-field>
+            <!-- Add product button -->
+            <button class="ml-4 mb-3.5" mat-flat-button [color]="'primary'" *ngIf="showAdd" (click)="createCustomer()">
+                <mat-icon [svgIcon]="'heroicons_outline:user-add'"></mat-icon>
+                <span class="ml-2 mr-1">Add</span>
+            </button>
+            <!-- <button class="ml-4 mb-3.5" mat-flat-button [color]="'primary'" (click)="isCertified = !isCertified"
+                *ngIf="showAdd && !isCertified">
+                <span class="ml-2 mr-1">certify</span>
+            </button> -->
+            <button class="ml-4 mb-3.5 bg-red-500 text-white" mat-flat-button (click)="isCertified = !isCertified"
+                *ngIf="isCertified">
+                <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
+                <span class="ml-2 mr-1">cancle</span>
+            </button>
+            <button class="ml-4 mb-3.5 bg-green-500" mat-flat-button [color]="'primary'"
+                (click)="isCertified = !isCertified" *ngIf="isCertified">
+                <mat-icon [svgIcon]="'heroicons_outline:check'"></mat-icon>
+                <span class="ml-2 mr-1">confirm</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main -->
+    <div class="flex flex-auto flex-col overflow-y-scroll">
+
+        <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8">
+            <ng-container matColumnDef="{{column.name}}" *ngFor="let column of columnsToDisplay">
+                <th mat-header-cell *matHeaderCellDef>
+                    <div class="flex items-center">
+                        <mat-icon [svgIcon]="'heroicons_outline:'+ column.icon"></mat-icon>
+                        {{translateTableHeader(column.name)}}
+
+                    </div>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element[column.name]}} </td>
+            </ng-container>
+            <ng-container matColumnDef="expand">
+                <th mat-header-cell *matHeaderCellDef aria-label="row actions">&nbsp;</th>
+                <td mat-cell *matCellDef="let element">
+                    <button mat-icon-button aria-label="expand row"
+                        (click)="(expandedElement = expandedElement === element ? null : element); $event.stopPropagation()">
+                        <mat-icon *ngIf="expandedElement !== element">keyboard_arrow_down</mat-icon>
+                        <mat-icon *ngIf="expandedElement === element">keyboard_arrow_up</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+            <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+            <ng-container matColumnDef="expandedDetail">
+                <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length">
+                    <div class="example-element-detail"
+                        [@detailExpand]="element === expandedElement ? 'expanded' : 'collapsed'">
+                        <div class="example-element-diagram">
+                            <div class="example-element-position">
+                                <img src="{{element.profilePhoto}}" alt="" *ngIf="element.profilePhoto.length > 0">
+                                <h2 class="h2 font-bold text-8xl text-center" *ngIf="!element.profilePhoto.length > 0">
+                                    {{element.firstName.charAt(0)}}</h2>
+                            </div>
+                        </div>
+                        <div class="flex w-[70%] flex-col">
+                            <h2 class="example-element-symbol">{{element.firstName}} {{element.lastName}}</h2>
+                            <h4 class="h5">{{element.username}}</h4>
+                            <div class="mt-3 w-[68%] justify-between flex">
+                                <h5 class="flex items-center"><mat-icon
+                                        class="mat-18 mr-1">location_on</mat-icon>{{element.houseNo}},
+                                    {{element.street}},
+                                    {{element.location}},
+                                    {{element.state}},
+                                    {{element.country}}</h5>
+                                <h4 class="flex items-center"><mat-icon class="mat-18 mr-1">cake</mat-icon>
+                                    {{formatDate(element.birthday)}}
+                                </h4>
+                                <h4 class="flex items-center">
+                                    <mat-icon class="mat-18 mr-1">phone</mat-icon>
+                                    {{element.phoneNo}}
+                                </h4>
+                            </div>
+
+                        </div>
+                        <!-- <div class="example-element-name"> {{element.country}} </div>
+                        <div class="example-element-weight"> {{element.onlineStatus}} </div>
+                        <div class="example-element-description">
+                            {{element.street}}
+                        </div> -->
+                    </div>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnsToDisplayWithExpand"></tr>
+            <tr mat-row *matRowDef="let element; columns: columnsToDisplayWithExpand;" class="example-element-row"
+                [class.example-expanded-row]="expandedElement === element"
+                (click)="expandedElement = expandedElement === element ? null : element">
+            </tr>
+            <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+        </table>
+        <mat-paginator [length]="totalElements" (page)="handlePageEvent($event)" [hidePageSize]="true"
+            [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 25, totalElements]" aria-label="Select page">
+        </mat-paginator>
+    </div>
+
+</div>

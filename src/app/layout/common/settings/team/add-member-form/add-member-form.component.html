@@ -1,0 +1,262 @@
+<!-- <div class=""> -->
+<h2 mat-dialog-title>Mitglied hinzufügen</h2>
+<!-- <mat-form-field class="w-50 mx-6">
+    <mat-label><ng-container>User type</ng-container></mat-label>
+    <mat-select [formControlName]="'user type'" #userType placeholder="User type" name="user type">
+        <mat-option value="male">Admin</mat-option>
+        <mat-option value="female">Company leader</mat-option>
+        <mat-option value="female">Company employee</mat-option>
+    </mat-select> -->
+<!-- <mat-error *ngIf="signUpForm.get('user type').hasError('required')">
+        <ng-container>User type erforderlich</ng-container>
+        </mat-error> -->
+<!-- <mat-error *ngIf="signUpForm.get('userType').hasError('required')">
+        <ng-container>User type required</ng-container>
+    </mat-error> -->
+<!-- <mat-error *ngIf="signUpForm.get('userType').hasError('userType')">
+        Bitte geben Sie ein gültiges Geschlecht ein
+    </mat-error>
+</mat-form-field>
+</div> -->
+<mat-dialog-content class="mat-typography overflow-x-hidden">
+    <form class="mt-8 flex flex-wrap gap-x-10" [formGroup]="signUpForm" #signUpNgForm="ngForm">
+        <!-- First Name field -->
+        <mat-form-field class="w-50 flex-auto">
+            <mat-label><ng-container i18n="@@signup.first.name">last name</ng-container></mat-label>
+            <input id="first-name" matInput [formControlName]="'firstName'" /><mat-icon>account_circle</mat-icon>
+            <mat-error *ngIf="signUpForm.get('firstName').hasError('required')">
+                <ng-container i18n="@@signup.first.name.required">last name</ng-container>
+            </mat-error>
+        </mat-form-field>
+        <!-- Last Name field -->
+        <mat-form-field class="w-50 flex-auto">
+            <mat-label><ng-container i18n="@@signup.last.name">last name</ng-container></mat-label>
+            <input id="last-name" matInput [formControlName]="'lastName'" /><mat-icon>account_circle</mat-icon>
+            <mat-error *ngIf="signUpForm.get('lastName').hasError('required')">
+                <ng-container i18n="@@signup.last.name.required">last name required</ng-container>
+            </mat-error>
+        </mat-form-field>
+        <!-- Birthday field -->
+        <mat-form-field class="w-50 flex-auto">
+            <mat-label><ng-container i18n="@@birthday">Geburtstag</ng-container></mat-label>
+            <input id="Birthday-confirm" matInput [matDatepicker]="picker" [max]="today"
+                [formControlName]="'birthday'" />
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="signUpForm.get('birthday').hasError('required')">
+                <ng-container i18n="@@birthday.required">Birthday required</ng-container>
+            </mat-error>
+            <mat-error *ngIf="signUpForm.get('birthday').hasError('birthday')">
+                Bitte geben Sie ein gültiges Geburtsdatum ein
+            </mat-error>
+        </mat-form-field>
+        <!-- Gender field -->
+        <mat-form-field class="w-50 flex-auto">
+            <mat-label><ng-container>Geschlecht</ng-container></mat-label>
+            <mat-select [formControlName]="'gender'" #gender placeholder="Gender" name="gender">
+                <mat-option value="male">Male</mat-option>
+                <mat-option value="female">Female</mat-option>
+            </mat-select>
+            <mat-error *ngIf="signUpForm.get('gender').hasError('required')">
+                <ng-container>Gender required</ng-container>
+            </mat-error>
+            <mat-error *ngIf="signUpForm.get('gender').hasError('gender')">
+                Bitte geben Sie ein gültiges Geschlecht ein
+            </mat-error>
+        </mat-form-field>
+        <!-- Data File Field -->
+        <div class="w-50 flex-auto">
+            <label for="dataFile" class="d-block">Daten-Datei</label>
+            <input type="file"
+                accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                formControlName="dataFile" id="dataFile" name="dataFile">
+        </div>
+        <!-- Term field  -->
+        <mat-form-field class="w-50 flex-auto">
+            <mat-label><ng-container>Begriff</ng-container></mat-label>
+            <input id="term" matInput type="datetime-local" [formControlName]="'term'" />
+            <mat-error *ngIf="signUpForm.get('term').hasError('required')">
+                <ng-container>Begriff erforderlich</ng-container>
+            </mat-error>
+        </mat-form-field>
+        <!-- Email field -->
+        <mat-form-field class="w-50 flex-auto">
+            <mat-label><ng-container i18n="@@signup.email">e-mail</ng-container></mat-label>
+            <input id="email" type="email" matInput [formControlName]="'email'" /><mat-icon> e-mail</mat-icon>
+            <mat-error *ngIf="signUpForm.get('email').hasError('required')">
+                <ng-container i18n="@@signup.email.required">e-mail erforderlich</ng-container>
+            </mat-error>
+            <mat-error *ngIf="signUpForm.get('email').hasError('email')">
+                Bitte geben Sie eine gültige E-Mail-Adresse ein
+            </mat-error>
+        </mat-form-field>
+
+        <!--Password Field-->
+        <mat-form-field class="w-50 flex-auto">
+            <mat-label><ng-container i18n="@@signup.password">password</ng-container></mat-label>
+            <input id="password" matInput type="password" (input)="checkPassword(passwordField.value)"
+                [formControlName]="'password'" #passwordField />
+            <button mat-icon-button type="button" (click)="
+                passwordField.type === 'password'
+                  ? (passwordField.type = 'text')
+                  : (passwordField.type = 'password')
+              " matSuffix>
+                <mat-icon class="icon-size-5" *ngIf="passwordField.type === 'password'"
+                    [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                <mat-icon class="icon-size-5" *ngIf="passwordField.type === 'text'"
+                    [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
+            </button>
+            <mat-error> Passwort ist erforderlich </mat-error>
+            <div *ngIf="passwordField.value">
+                {{ passwordStatus }}
+            </div>
+        </mat-form-field>
+        <!-- confirm password -->
+        <mat-form-field class="w-50 flex-auto">
+            <mat-label><ng-container i18n="@@password.confirm">Confirm</ng-container></mat-label>
+            <input id="cPassword" matInput type="password" [formControlName]="'cPassword'" #cPasswordField />
+            <button mat-icon-button type="button" (click)="
+                cPasswordField.type === 'password'
+                  ? (cPasswordField.type = 'text')
+                  : (cPasswordField.type = 'password')
+              " matSuffix>
+                <mat-icon class="icon-size-5" *ngIf="cPasswordField.type === 'password'"
+                    [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                <mat-icon class="icon-size-5" *ngIf="cPasswordField.type === 'text'"
+                    [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
+            </button>
+            <mat-error>
+                <ng-container i18n="@@password.confirm.required">confirm password required</ng-container>
+            </mat-error>
+            <mat-error *ngIf="
+                password.value !== cPassword.value && cPassword.value !== ''
+              ">
+                Passwort stimmt nicht überein
+            </mat-error>
+        </mat-form-field>
+
+        <!-- Company Street field -->
+        <mat-form-field class="w-50 flex-auto">
+            <mat-label><ng-container i18n="@@street">Firmenstraße</ng-container></mat-label>
+            <input id="Street-confirm" matInput [formControlName]="'companyStreet'" />
+            <mat-error *ngIf="signUpForm.get('companyStreet').hasError('required')">
+                <ng-container i18n="@@street.required">Firmenstraße erforderlich</ng-container>
+            </mat-error>
+            <mat-error *ngIf="signUpForm.get('companyStreet').hasError('companyStreet')">
+                Bitte geben Sie eine gültige Straße ein
+            </mat-error>
+        </mat-form-field>
+        <!-- House Number field -->
+        <mat-form-field class="w-50 flex-auto">
+            <mat-label><ng-container i18n="@@house.number">Firmennummer</ng-container></mat-label>
+            <input id="house-number-confirm" matInput type="number" [formControlName]="'companyNo'" />
+            <mat-error *ngIf="signUpForm.get('companyNo').hasError('required')">
+                <ng-container i18n="@@house.number.required">Hausnummer erforderlich</ng-container>
+            </mat-error>
+            <mat-error *ngIf="signUpForm.get('companyNo').hasError('companyNo')">
+                Bitte geben Sie eine gültige Hausnummer ein
+            </mat-error>
+        </mat-form-field>
+        <!-- Zip field -->
+        <mat-form-field class="w-50 flex-auto">
+            <mat-label><ng-container>Firmen-PLZ</ng-container></mat-label>
+            <input id="zip-confirm" matInput type="number" [formControlName]="'companyZip'" />
+            <mat-error *ngIf="signUpForm.get('companyZip').hasError('required')">
+                <ng-container>PLZ erforderlich</ng-container>
+            </mat-error>
+            <mat-error *ngIf="signUpForm.get('companyZip').hasError('companyZip')">
+                Bitte geben Sie eine gültige Postleitzahl ein
+            </mat-error>
+        </mat-form-field>
+        <!-- Location field -->
+        <mat-form-field class="w-50 flex-auto">
+            <mat-label><ng-container>Firmenstandort</ng-container></mat-label>
+            <input id="location-confirm" matInput [formControlName]="'companyLocation'" /><mat-icon>
+                location_on</mat-icon>
+            <mat-error *ngIf="signUpForm.get('companyLocation').hasError('required')">
+                <ng-container>Firmenstandort ist erforderlich</ng-container>
+            </mat-error>
+            <mat-error *ngIf="signUpForm.get('companyLocation').hasError('companyLocation')">
+                Bitte geben Sie eine gültige Ort ein
+            </mat-error>
+        </mat-form-field>
+        <!-- Country field -->
+        <mat-form-field class="w-50 flex-auto">
+            <mat-label><ng-container i18n="@@country">Company Country</ng-container></mat-label>
+            <mat-select [formControlName]="'companyCountry'" #country placeholder="Country" name="country"
+                (ngModelChange)="getCountryName($event)">
+                <mat-option *ngFor="let country of countryValue" [value]="country.CountryName">
+                    {{ country.CountryName }}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="signUpForm.get('companyCountry').hasError('required')">
+                <ng-container i18n="@@country.required">Company Country required</ng-container>
+            </mat-error>
+            <mat-error *ngIf="signUpForm.get('companyCountry').hasError('companyCountry')">
+                Bitte geben Sie ein gültiges Land ein
+            </mat-error>
+        </mat-form-field>
+        <!-- Phone No field -->
+        <mat-form-field class="w-50 flex-auto">
+            <mat-label><ng-container i18n="@@phonenumber">phone</ng-container></mat-label>
+            <input id="phone-number-confirm" type="tel" matInput [formControlName]="'phoneNo'" /><mat-icon>
+                phone</mat-icon>
+            <mat-error *ngIf="signUpForm.get('phoneNo').hasError('required')">
+                <ng-container i18n="@@phonenumber.required">phone required</ng-container>
+            </mat-error>
+            <mat-error *ngIf="signUpForm.get('phoneNo').hasError('phoneNo')">
+                Bitte geben Sie eine gültige Telefonnummer ein
+            </mat-error>
+        </mat-form-field>
+        <!-- VideoCall Link -->
+        <mat-form-field class="w-50 flex-auto">
+            <mat-label><ng-container>Videokonferenz-Link</ng-container></mat-label>
+            <input id="videoCallLink" type="url" matInput
+                [formControlName]="'videoCallLink'" /><mat-icon>link</mat-icon>
+        </mat-form-field>
+
+        <!--User role-->
+        <mat-form-field class="w-50 flex-auto">
+            <mat-label><ng-container i18n="@@signup.user.role">Benutzerrolle</ng-container></mat-label>
+            <input id="user-role" matInput [formControlName]="'userRole'" />
+            <mat-icon>account_circle</mat-icon>
+            <mat-error *ngIf="signUpForm.get('userRole').hasError('required')">
+                <ng-container i18n="@@signup.user.role.required">user role</ng-container>
+            </mat-error>
+        </mat-form-field>
+
+        <!-- Profile Picture field -->
+        <div class="w-50 flex-auto">
+            <label for="profilePic" class="d-block">Profilbild</label>
+            <input type="file" formControlName="profilePhoto" id="profilePic" accept="image/*" name="profilePic">
+        </div>
+
+        <br />
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Abbrechen</button>
+    <button mat-button [mat-dialog-close]="signUpForm.value" cdkFocusInitial>Hinzufügen</button>
+</mat-dialog-actions>
+
+
+<!-- // Vorname (firstname): String
+// Nachname (family name): String
+// Geburtstag (Birthday): Date
+// Geschlecht (male/female): String[]
+// Strasse (company street): String
+// Hausnummer (company number): String
+// PLZ (Zip company): Integer
+// Ort (company location): String
+// Land (company country): String[]
+// Email: String
+// Telefonnr. (Phone number): String
+// Datenordner (Datas): File
+// Foto (photo): File
+// Online-Status: String[]
+// Zeitdauer (term): Time
+// create-time: Date
+// update-time: Date
+// URL: String
+// Link for Videocall: String
+// Company name: String -->

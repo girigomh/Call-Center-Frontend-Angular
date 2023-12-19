@@ -1,0 +1,147 @@
+<!-- <div class="input-container">
+    <div *ngFor="let day of days">
+        <form action="" [formGroup]="companyHoursForm">
+            <div class="input-group mt-5">
+                <label for="openingTime" class="w-full block">Company Opening Time:</label>
+                <input type="time" id="openingTime" name="openingTime" formControlName="openingHours"
+                    class="px-1 py-1 border border-black w-full">
+            </div>
+
+            <div class="input-group mt-5">
+                <label for="lunchBreak" class="w-full block">Company Lunch Break Start Time:</label>
+                <input type="time" id="lunchBreak" name="lunchBreak" formControlName="lunchBreakOpeningHours"
+                    class="px-1 py-1 border border-black w-full">
+            </div>
+            <div class="input-group mt-5">
+                <label for="lunchBreak" class="w-full block">Company Lunch Break End Time::</label>
+                <input type="time" id="lunchBreak" name="lunchBreak" formControlName="lunchBreakClosingHours"
+                    class="px-1 py-1 border border-black w-full">
+            </div>
+
+            <div class="input-group mt-5">
+                <label for="closingTime" class="w-full block">Company Closing Time:</label>
+                <input type="time" id="closingTime" name="closingTime" formControlName="closingHours"
+                    class="px-1 py-1 border border-black w-full">
+            </div>
+            </form>
+    </div>
+    <div class="text-right">
+        <button (click)="AddHours()" *ngIf="days.length != 7">
+            Add Hours
+        </button>
+        <button (click)="AddHours()" *ngIf="days.length == 7" class="btnNext">
+            Next
+        </button>
+        </div>
+        </div> -->
+
+
+<div class="input-container">
+    <!-- <form [formGroup]="companyHoursForm">
+        
+                <ng-container *ngFor="let day of days; let i = index">
+                    <p *ngIf="i === currentDayIndex">{{day}}</p>
+                    <div *ngIf="i === currentDayIndex && i !== days.length - 1">
+                        <div *ngIf="errorMessageForTime">
+                            <p>{{errorMessageForTime}}</p>
+                        </div>
+                        <div class="input-group mt-5">
+                            <label class="w-full block">Company Opening Time</label>
+                            <input type="time" formControlName="openingHours" class="px-1 py-1 border border-black w-full"
+                                (change)="selectTime('openTime')">
+                        </div>
+                        <div class="input-group mt-5">
+                            <label class="w-full block">Company Lunch Break Start Time</label>
+                            <input type="time" formControlName="lunchBreakOpeningHours"
+                                class="px-1 py-1 border border-black w-full" (change)="selectTime('startBreakTime')">
+        
+        
+                        </div>
+                        <div class="input-group mt-5">
+                            <label class="w-full block">Company Lunch Break End Time</label>
+                            <input type="time" formControlName="lunchBreakClosingHours"
+                                class="px-1 py-1 border border-black w-full" (change)="selectTime('closeBreakTime')">
+                        </div>
+        
+                        <div class="input-group mt-5">
+                            <label class="w-full block">Company Closing Time</label>
+                            <input type="time" formControlName="closingHours" class="px-1 py-1 border border-black w-full"
+                                (change)="selectTime('closeTime')">
+                        </div>
+        
+                        <div class="text-right">
+                            <button (click)="prevDay(i-1)" *ngIf="currentDayIndex > 0" class="btnNext">Previous</button>
+                            <button (click)="nextDay(day)" *ngIf="currentDayIndex < days.length - 1"
+                                class="btnNext">Next</button>
+                            <button (click)="AddHours()" class="btnNext">Submit</button>
+                        </div>
+                    </div>
+        
+                </ng-container>
+            </form> -->
+    <div class="flex justify-between text-red-700 bg-red-50 p-3 border border-red-500" *ngIf="showError">
+        <p>{{showError}}</p>
+        <mat-icon (click)="showError = ''">close</mat-icon>
+    </div>
+    <table class="table-bordered">
+        <thead>
+            <tr>
+                <th class="p-2">Tag der Woche</th>
+                <th class="p-2">Unternehmensöffnungszeit</th>
+                <th class="p-2">Unternehmensbeginn der Mittagspause</th>
+                <th class="p-2">Unternehmensende der Mittagspause</th>
+                <th class="p-2">Unternehmensschließzeit</th>
+                <th class="p-2">Geschlossen</th>
+            </tr>
+        </thead>
+        <tbody *ngIf="multipleFormControls.length">
+            <tr *ngFor="let day of days; let i = index">
+                <td class="p-2">{{day}}</td>
+                <td class="text-center">
+                    <input type="time" name="openingTime" [ngxTimepicker]="starttime"
+                        [(ngModel)]="multipleFormControls[i].openingHours" id=""
+                        [disabled]="multipleFormControls[i].closed" [format]="24" readonly>
+                    <ngx-material-timepicker #starttime [format]="24"></ngx-material-timepicker>
+                </td>
+                <td class="text-center">
+                    <input type="time" name="lunchBreakOpeningHours" [ngxTimepicker]="lunchtime"
+                        [(ngModel)]="multipleFormControls[i].lunchBreakOpeningHours" id=""
+                        [disabled]="multipleFormControls[i].closed" [format]="24" readonly>
+                    <ngx-material-timepicker #lunchtime [format]="24"></ngx-material-timepicker>
+                </td>
+                <td class="text-center">
+                    <input type="time" name="lunchBreakClosingHours" [ngxTimepicker]="closelunch"
+                        [(ngModel)]="multipleFormControls[i].lunchBreakClosingHours" id=""
+                        [disabled]="multipleFormControls[i].closed" [format]="24" readonly>
+                    <ngx-material-timepicker #closelunch [format]="24"></ngx-material-timepicker>
+                </td>
+                <td class="text-center">
+                    <input type="time" name="closingHours" [ngxTimepicker]="closingtime"
+                        [(ngModel)]="multipleFormControls[i].closingHours" id=""
+                        [disabled]="multipleFormControls[i].closed" [format]="24" readonly>
+                    <ngx-material-timepicker #closingtime [format]="24"></ngx-material-timepicker>
+                </td>
+                <td class="text-center">
+                    <input type="checkbox" (change)="toggleClosed(i)" name="SundayValue"
+                        [(ngModel)]="multipleFormControls[i].closed" id="">
+
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="text-right">
+        <button (click)="AddHours()" class="btnNext">Submit</button>
+    </div>
+    <!-- <div *ngIf="currentDayIndex === days.length - 1">
+                <form [formGroup]="companyHoursForm">
+                    <div class="input-group mt-5">
+                        <label class="w-full block">Sunday Off/On:</label>
+                        <input type="checkbox" formControlName="SundayValue">
+                    </div>
+                    <div class="text-right">
+                        <button (click)="prevDay()" *ngIf="currentDayIndex > 0" class="btnNext">Previous</button>
+                        <button (click)="AddHours()" class="btnNext">Submit</button>
+                    </div>
+                </form>
+            </div> -->
+</div>

@@ -1,0 +1,405 @@
+<div class="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-auto min-w-0">
+    <div
+        class="md:flex md:items-center md:justify-end w-full sm:w-auto md:h-full md:w-1/2 py-8 px-4 sm:p-12 md:p-16 sm:rounded-2xl md:rounded-none sm:shadow md:shadow-none sm:bg-card">
+        <div class="w-full mx-auto sm:mx-0">
+            <!-- Logo -->
+            <div class="w-12">
+                <img src="assets/images/logo/logo.png" />
+            </div>
+
+            <!-- Title -->
+            <div class="mt-8 text-4xl font-extrabold tracking-tight leading-tight">
+                <ng-container i18n="@@register">register</ng-container>
+            </div>
+            <div class="flex items-baseline mt-0.5 font-medium">
+                <div><ng-container i18n="@@signup.account">don't have account</ng-container></div>
+                <a class="ml-1 text-primary-500 hover:underline" [routerLink]="['/sign-in']">
+                    <ng-container i18n="@@login">login</ng-container>
+                </a>
+            </div>
+
+            <!-- Languages -->
+            <div class="flex items-center pl-2 ml-auto space-x-0.5 sm:space-x-2">
+                <languages></languages>
+            </div>
+
+            <!-- Alert -->
+            <fuse-alert class="mt-8 -mb-4" *ngIf="showAlert" [appearance]="'outline'" [showIcon]="false"
+                [type]="alert.type" [@shake]="alert.type === 'error'">
+                {{ alert.message }}
+            </fuse-alert>
+
+
+            <!-- Sign Up form -->
+            <form class="mt-8 flex flex-wrap gap-x-10" [formGroup]="signUpForm" #signUpNgForm="ngForm">
+                <!-- First Name field -->
+                <mat-form-field class="w-50 flex-auto">
+                    <mat-label><ng-container i18n="@@signup.first.name">last name</ng-container></mat-label>
+                    <input id="first-name" matInput
+                        [formControlName]="'firstName'" /><mat-icon>account_circle</mat-icon>
+                    <mat-error *ngIf="signUpForm.get('firstName').hasError('required')">
+                        <ng-container i18n="@@signup.first.name.required">last name</ng-container>
+                    </mat-error>
+                </mat-form-field>
+                <!-- Last Name field -->
+                <mat-form-field class="w-50 flex-auto">
+                    <mat-label><ng-container i18n="@@signup.last.name">last name</ng-container></mat-label>
+                    <input id="last-name" matInput [formControlName]="'lastName'" /><mat-icon>account_circle</mat-icon>
+                    <mat-error *ngIf="signUpForm.get('lastName').hasError('required')">
+                        <ng-container i18n="@@signup.last.name.required">last name required</ng-container>
+                    </mat-error>
+                </mat-form-field>
+                <!-- Email field -->
+                <mat-form-field class="w-50 flex-auto">
+                    <mat-label><ng-container i18n="@@signup.email">email</ng-container></mat-label>
+                    <input id="email" type="email" matInput [formControlName]="'email'" /><mat-icon> email</mat-icon>
+                    <mat-error *ngIf="signUpForm.get('email').hasError('required')">
+                        <ng-container i18n="@@signup.email.required">email required</ng-container>
+                    </mat-error>
+                    <mat-error *ngIf="signUpForm.get('email').hasError('email')">
+                        Bitte geben Sie eine gültige E-Mail-Adresse ein
+                    </mat-error>
+                </mat-form-field>
+                <!-- Password field -->
+                <mat-form-field class="w-50 flex-auto">
+                    <mat-label><ng-container i18n="@@signup.password">password</ng-container></mat-label>
+                    <input id="password" matInput type="password" (input)="checkPassword(passwordField.value)"
+                        [formControlName]="'password'" #passwordField />
+                    <button mat-icon-button type="button" (click)="
+                            passwordField.type === 'password'
+                                ? (passwordField.type = 'text')
+                                : (passwordField.type = 'password')
+                        " matSuffix>
+                        <mat-icon class="icon-size-5" *ngIf="passwordField.type === 'password'"
+                            [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                        <mat-icon class="icon-size-5" *ngIf="passwordField.type === 'text'"
+                            [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
+                    </button>
+                    <mat-error> Passwort ist erforderlich </mat-error>
+                    <div *ngIf="passwordField.value">
+                        {{ passwordStatus }}
+                    </div>
+                </mat-form-field>
+                <!-- confirm password -->
+                <mat-form-field class="w-50 flex-auto">
+                    <mat-label><ng-container i18n="@@password.confirm">Confirm</ng-container></mat-label>
+                    <input id="cPassword" matInput type="password" [formControlName]="'cPassword'" #cPasswordField />
+                    <button mat-icon-button type="button" (click)="
+                            cPasswordField.type === 'password'
+                                ? (cPasswordField.type = 'text')
+                                : (cPasswordField.type = 'password')
+                        " matSuffix>
+                        <mat-icon class="icon-size-5" *ngIf="cPasswordField.type === 'password'"
+                            [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                        <mat-icon class="icon-size-5" *ngIf="cPasswordField.type === 'text'"
+                            [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
+                    </button>
+                    <mat-error>
+                        <ng-container i18n="@@password.confirm.required">confirm password required</ng-container>
+                    </mat-error>
+                    <mat-error *ngIf="
+                            password.value !== cPassword.value &&
+                            cPassword.value !== ''
+                        ">
+                        Passwort stimmt nicht überein
+                    </mat-error>
+                </mat-form-field>
+                <!-- Birthday field -->
+
+                <mat-form-field class="w-50 flex-auto">
+                    <mat-label><ng-container i18n="@@birthday">Birthday</ng-container></mat-label>
+                    <input id="Birthday-confirm" matInput [matDatepicker]="picker" [max]="maxDate"
+                        [formControlName]="'birthday'" name="birthdayDate" #birthday />
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-error *ngIf="signUpForm.get('birthday').hasError('required')">
+                        Birthday required
+                    </mat-error>
+                    <mat-error *ngIf="signUpForm.get('birthday').hasError('minimumAge')">
+                        You must be at least 18 years old
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- <mat-form-field appearance="fill" class="w-full">
+                    <mat-label>Geburtsdatum</mat-label>
+                    <input matInput formControlName="birthday" [matDatepicker]="picker" [max]="maxDate" />
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-error *ngIf="signUpForm.get('birthday').hasError('required')">
+                        Geburtsdatum erforderlich
+                    </mat-error>
+                    <mat-error *ngIf="signUpForm.get('birthday').hasError('minimumAge')">
+                        You must be at least 18 years old
+                    </mat-error>
+                </mat-form-field> -->
+
+                <!-- <mat-form-field class="w-50 flex-auto">
+                    <mat-label><ng-container i18n="@@birthday">Birthday</ng-container></mat-label>
+                    <input id="Birthday-confirm" matInput [matDatepicker]="picker" [max]="today"
+                        [formControlName]="'birthday'" name="birthdayDate" #birthday />
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-error *ngIf="signUpForm.get('birthday').hasError('required')">
+                        Birthday required
+                    </mat-error>
+                    <mat-error *ngIf="signUpForm.get('birthday').hasError('minimumAge')">
+                        You must be at least 18 years old
+                    </mat-error> -->
+
+                <!-- <mat-error *ngIf="signUpForm.get('birthday').hasError('required')">
+                        <ng-container i18n="@@birthday.required">Birthday required</ng-container>
+                    </mat-error>
+                    <mat-error *ngIf="signUpForm.get('birthday').hasError('birthday')">
+                        Bitte geben Sie ein gültiges Geburtsdatum ein
+                    </mat-error> -->
+                <!-- </mat-form-field> -->
+                <!-- House Number field -->
+                <mat-form-field class="w-50 flex-auto">
+                    <mat-label><ng-container i18n="@@house.number">number</ng-container></mat-label>
+                    <input id="house-number-confirm" matInput type="number" [formControlName]="'houseNo'" />
+                    <mat-error *ngIf="signUpForm.get('houseNo').hasError('required')">
+                        <ng-container i18n="@@house.number.required">house number required</ng-container>
+                    </mat-error>
+                    <mat-error *ngIf="signUpForm.get('houseNo').hasError('houseNo')">
+                        Bitte geben Sie eine gültige Hausnummer ein
+                    </mat-error>
+                </mat-form-field>
+                <!-- Street field -->
+                <mat-form-field class="w-50 flex-auto">
+                    <mat-label><ng-container i18n="@@street">street</ng-container></mat-label>
+                    <input id="Street-confirm" matInput [formControlName]="'street'" />
+                    <mat-error *ngIf="signUpForm.get('street').hasError('required')">
+                        <ng-container i18n="@@street.required">street required</ng-container>
+                    </mat-error>
+                    <mat-error *ngIf="signUpForm.get('street').hasError('street')">
+                        Bitte geben Sie eine gültige Straße ein
+                    </mat-error>
+                </mat-form-field>
+                <!-- City field -->
+                <mat-form-field class="w-50 flex-auto">
+                    <mat-label><ng-container i18n="@@city">city</ng-container></mat-label>
+                    <input id="city" matInput [formControlName]="'city'" /><mat-icon>account_circle</mat-icon>
+                    <mat-error *ngIf="signUpForm.get('city').hasError('required')">
+                        <ng-container i18n="@@city.required">last name required</ng-container>
+                    </mat-error>
+                </mat-form-field>
+                <!-- Zip field -->
+                <mat-form-field class="w-50 flex-auto">
+                    <mat-label><ng-container i18n="@@zip">zip</ng-container></mat-label>
+                    <input id="zip-confirm" matInput type="number" [formControlName]="'zip'" />
+                    <mat-error *ngIf="signUpForm.get('zip').hasError('required')">
+                        <ng-container i18n="@@zip.required">zip required</ng-container>
+                    </mat-error>
+                    <mat-error *ngIf="signUpForm.get('zip').hasError('zip')">
+                        Bitte geben Sie eine gültige Postleitzahl ein
+                    </mat-error>
+                </mat-form-field>
+                <!-- Location field -->
+                <mat-form-field class="w-50 flex-auto">
+                    <mat-label><ng-container i18n="@@Location">Location</ng-container></mat-label>
+                    <input id="location-confirm" matInput [formControlName]="'location'" /><mat-icon>
+                        location_on</mat-icon>
+                    <mat-error *ngIf="signUpForm.get('location').hasError('required')">
+                        <ng-container i18n="@@location.required">Location required</ng-container>
+                    </mat-error>
+                    <mat-error *ngIf="signUpForm.get('location').hasError('location')">
+                        Bitte geben Sie eine gültige Ort ein
+                    </mat-error>
+                </mat-form-field>
+                <!-- Country field -->
+
+                <!-- <mat-form-field class="w-50 flex-auto">
+                    <mat-label>Country</mat-label>
+                    <mat-select #country formControlName="country" placeholder="Country">
+                        <mat-option *ngFor="let country of countries" [value]="country.country"
+                            (click)="onCountrySelect(country)">{{country.country}}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="signUpForm.get('country').hasError('required')">
+                        Country is required
+                    </mat-error>
+                    <mat-error *ngIf="signUpForm.get('country').hasError('country')">
+                        Please enter a valid Country
+                    </mat-error>
+                </mat-form-field>
+                 -->
+
+                <!-- country field -->
+                <mat-form-field class="w-50 flex-auto">
+                    <mat-label><ng-container i18n="@@country">Country</ng-container></mat-label>
+                    <mat-select [formControlName]="'country'" #country placeholder="Country" name="country"
+                        (ngModelChange)="getCountryName($event)">
+                        <mat-option *ngFor="let country of countryValue" [value]="country.CountryName">
+                            {{ country.CountryName }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="signUpForm.get('country').hasError('required')">
+                        <ng-container i18n="@@country.required">Country required</ng-container>
+                    </mat-error>
+                    <mat-error *ngIf="signUpForm.get('country').hasError('country')">
+                        Bitte geben Sie ein gültiges Land ein
+                    </mat-error>
+                </mat-form-field>
+                <!-- country field -->
+
+                <!-- state field -->
+                <mat-form-field class="w-50 flex-auto">
+                    <mat-label><ng-container i18n="@@state">state</ng-container></mat-label>
+                    <mat-select [formControlName]="'state'" #state placeholder="{{placeholder.state}}" name="state">
+                        <mat-option *ngFor="let state of states" [value]="state">
+                            {{ state }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="signUpForm.get('state').hasError('required')">
+                        <ng-container i18n="@@state.required">State required</ng-container>
+                    </mat-error>
+                    <mat-error *ngIf="signUpForm.get('state').hasError('state')">
+                        Bitte geben Sie einen gültigen Status ein
+                    </mat-error>
+                </mat-form-field>
+                <!-- state field -->
+
+                <!-- Phone No field -->
+                <mat-form-field class="w-50 flex-auto">
+                    <mat-label><ng-container i18n="@@phonenumber">phone</ng-container></mat-label>
+                    <input id="phone-number-confirm" type="tel" matInput [formControlName]="'phoneNo'" /><mat-icon>
+                        phone</mat-icon>
+                    <mat-hint align="start"><strong>don't include space between numbers</strong> </mat-hint>
+                    <mat-error *ngIf="signUpForm.get('phoneNo').hasError('required')">
+                        <ng-container i18n="@@phonenumber.required">phone required</ng-container>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="w-50 flex-auto">
+                    <mat-label><ng-container i18n="@@signup.email">Email-bestätigen</ng-container></mat-label>
+                    <input id="email" type="email" matInput [formControlName]="'recoveryEmail'" /><mat-icon>
+                        email</mat-icon>
+                    <mat-error *ngIf="signUpForm.get('recoveryEmail').hasError('required')">
+                        <ng-container i18n="@@signup.recoveryEmail.required">recovery email required</ng-container>
+                    </mat-error>
+                    <mat-error *ngIf="signUpForm.get('email').value !== signUpForm.get('recoveryEmail').value">
+                        email and recoveryEmail email is not same
+                    </mat-error>
+                    <mat-error *ngIf="signUpForm.get('recoveryEmail').hasError('recoveryEmail')">
+                        Bitte geben Sie eine gültige Recovery E-Mail-Adresse ein
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- <mat-form-field class="w-50 flex-auto">
+                    <mat-label><ng-container i18n="@@anmelden.als">anmelden als</ng-container></mat-label>
+                    <mat-select [formControlName]="'userType'" #userType placeholder="{{placeholder.userType}}">
+                        <mat-option *ngFor="let userType of types" [value]="userType.name">
+                            {{userType.label}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="signUpForm.get('userType').hasError('required')">
+                        <ng-container i18n="@@user.type.required">user type required</ng-container>
+                    </mat-error>
+                    <mat-error *ngIf="signUpForm.get('userType').hasError('userType')">
+                        Bitte geben Sie ein gültiges Type ein
+                    </mat-error>
+                </mat-form-field> -->
+                <!-- <form [formGroup]="signUpForm"> -->
+                <div class="w-50 flex-auto">
+                    <mat-label><ng-container i18n="@@anmelden.als">Geschlecht :* </ng-container></mat-label>
+                    <!-- <h3 class="font-semibold">Geschlecht :*</h3> -->
+                    <mat-radio-group aria-label="Select an option" [formControlName]="'gender'">
+                        <mat-radio-button value="M">Männlich</mat-radio-button>
+                        <mat-radio-button value="F" class="ml-1">Weiblich</mat-radio-button>
+                        <mat-radio-button value="O" class="ml-1">andere</mat-radio-button>
+                        <mat-error
+                            *ngIf="!signUpForm.get('gender').untouched && signUpForm.get('gender').hasError('required')">
+                            <ng-container>gender is required</ng-container>
+                        </mat-error>
+                    </mat-radio-group>
+                    <!-- <mat-error
+                        *ngIf="!signUpForm.get('gender').untouched && signUpForm.get('gender').hasError('required')">
+                        <ng-container>gender is required</ng-container>
+                    </mat-error> -->
+                </div>
+
+                <!-- ToS and PP -->
+                <div class="inline-flex items-end w-full mt-1.5">
+                    <mat-checkbox required [formControlName]="'agreements'">
+                        <span i18n="@@signup.agree1">i agree to the</span>
+                        <a class="ml-1 text-primary-500 hover:underline" [routerLink]="['./']">
+                            <ng-container i18n="@@signup.terms.of.service">Terms of service</ng-container>
+                        </a>
+                        <span><ng-container i18n="@@signup.agree2">And</ng-container></span>
+                        <a class="ml-1 text-primary-500 hover:underline" [routerLink]="['./']">
+                            <ng-container i18n="@@signup.privacy.policy">Privacy policy</ng-container>
+                        </a>
+                        <!-- <mat-error *ngIf="!signUpForm.get('agreements').hasError('required')">
+                            <ng-container i18n="@@signup.terms.of.service.required">agreement required</ng-container>
+                        </mat-error>
+                        <mat-error *ngIf="!signUpForm.get('agreements').hasError('required')">
+                            <ng-container>agreements is required</ng-container>
+                        </mat-error> -->
+                    </mat-checkbox>
+
+                </div>
+                <!-- </form> -->
+
+                <br />
+
+                <div class="inline-flex items-end w-full mt-1.5">
+                    <ng-hcaptcha [formControlName]="'captcha'"></ng-hcaptcha>
+                    <!--
+                    <ng-hcaptcha (verify)="onVerify($event)"
+                        (expired)="onExpired($event)"
+                        (error)="onError($event)">
+                    </ng-hcaptcha>
+                    -->
+                </div>
+                <br />
+                <!-- Submit button -->
+                <button class="fuse-mat-button-large w-1/2 mx-auto mt-6"
+                    data-sitekey="dd96f6a5-1f1b-46b0-9911-31ae49a0ed9b" mat-flat-button [color]="'primary'"
+                    [disabled]="signUpForm.disabled || !termsAndConditions" (click)="signUp()">
+                    <span *ngIf="!signUpForm.disabled">
+                        <ng-container i18n="@@signup.create.free.account">create</ng-container>
+                    </span>
+                    <mat-progress-spinner *ngIf="signUpForm.disabled" [diameter]="24"
+                        [mode]="'indeterminate'"></mat-progress-spinner>
+                </button>
+            </form>
+        </div>
+    </div>
+    <div
+        class="relative hidden md:flex flex-auto items-center justify-center w-1/2 h-full p-16 lg:px-28 overflow-hidden bg-gray-800 dark:border-l">
+        <!-- Background - @formatter:off -->
+        <!-- Rings -->
+        <svg class="absolute inset-0 pointer-events-none" viewBox="0 0 960 540" width="100%" height="100%"
+            preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+            <g class="text-gray-700 opacity-25" fill="none" stroke="currentColor" stroke-width="100">
+                <circle r="234" cx="196" cy="23"></circle>
+                <circle r="234" cx="790" cy="491"></circle>
+            </g>
+        </svg>
+        <!-- Dots -->
+        <svg class="absolute -top-16 -right-16 text-gray-700" viewBox="0 0 220 192" width="220" height="192"
+            fill="none">
+            <defs>
+                <pattern id="837c3e70-6c3a-44e6-8854-cc48c737b659" x="0" y="0" width="20" height="20"
+                    patternUnits="userSpaceOnUse">
+                    <rect x="0" y="0" width="4" height="4" fill="currentColor"></rect>
+                </pattern>
+            </defs>
+            <rect width="220" height="192" fill="url(#837c3e70-6c3a-44e6-8854-cc48c737b659)"></rect>
+        </svg>
+        <!-- @formatter:on -->
+        <!-- Content -->
+        <div class="z-10 relative w-full max-w-2xl">
+            <div class="text-7xl font-bold leading-none text-gray-100 text-start w-full mx-auto">
+                <h1>Willkommen zu unserer
+                    Plattform von ComCom.</h1>
+            </div>
+            <div class="mt-6 text-lg tracking-tight leading-6 text-gray-400 w-full mx-auto">
+                <p>Das VideoCallCenter bietet eine einheitliche Schnittstelle für
+                    ÖGS-Dolmetscher, Schriftdolmetscher und Agenten. Dazu gehören
+                    auch spontane und sofortige Video-Kommunikation,
+                    Notfallvermittlung mittels DEC112, Terminplanung, sowie Anträge
+                    und Verrechnungen.</p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,194 @@
+<div class="w-full max-w-3xl">
+
+    <!-- Form -->
+    <form [formGroup]="planBillingForm" (submit)="handleSubmit()">
+
+        <!-- Section -->
+        <div class="w-full">
+            <div class="text-xl">Ändere deinen Plan</div>
+            <div class="text-secondary">Upgrade oder Downgrade deines aktuellen Plans.</div>
+        </div>
+        <!-- <div class="w-full mt-5 font-medium">Rechnungsstellung:</div> -->
+        <div class="flex items-center justify-between py-3">
+            <div class="flex-auto leading-6 cursor-pointer" (click)="comments.toggle()">
+                <div class="leading-6 font-medium">Rechnungsstellung:</div>
+                Soll ich meine Rechnungen per E-Mail oder direkt auf der Plattform selbst erhalten?
+            </div>
+            <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'comments'" #comments>
+            </mat-slide-toggle>
+        </div>
+
+        <div class="flex items-center justify-between py-3">
+            <div class="flex-auto leading-6 cursor-pointer" (click)="comments.toggle()">
+                <div class="leading-6 font-medium">Abrechnungszeitraum:</div>
+                Ich möchte sofort, monatlich oder jährlich abgerechnet werden.
+            </div>
+            <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'comments'" #comments>
+            </mat-slide-toggle>
+        </div>
+        <div class="my-6 border-t"></div>
+        <div class="grid sm:grid-cols-3 gap-6 w-full mt-8">
+            <!-- Plan -->
+            <div class="sm:col-span-3">
+                <fuse-alert [appearance]="'outline'" [type]="'info'">
+                    Planänderungen werden erst nach neuem Monat wirksam. Der Rest des laufenden Monats wird dir
+                    in Rechnung gestellt.
+                </fuse-alert>
+            </div>
+            <div class="sm:col-span-3">
+                <fuse-alert [appearance]="'outline'" [type]="'info'">
+                    In der Testphase entsteht keine Kosten. Da dieses System sehr neu ist und keine ähnliche
+                    vergangenen Projekte existiert, kann die Application Fehler auftreten. Wir versichern, dass trotz
+                    auftreten von Fehlern keine persönliche Daten publiziert wird. Wir informieren dich,
+                    wenn die Betaphase beendet ist und Gebühren veranlagt wird.
+                </fuse-alert>
+            </div>
+            <mat-radio-group class="invisible absolute w-0 h-0 pointer-events-none" [formControlName]="'plan'"
+                #planRadioGroup="matRadioGroup">
+                <ng-container *ngFor="let plan of plans; trackBy: trackByFn">
+                    <mat-radio-button [value]="plan.value"></mat-radio-button>
+                </ng-container>
+            </mat-radio-group>
+            <ng-container *ngFor="let plan of plans; trackBy: trackByFn">
+                <div class="relative flex flex-col items-start justify-start p-6 rounded-md shadow cursor-pointer bg-card"
+                    [ngClass]="{'ring ring-inset ring-primary': planRadioGroup.value === plan.value}"
+                    (click)="planRadioGroup.value = plan.value">
+                    <ng-container *ngIf="planRadioGroup.value === plan.value">
+                        <mat-icon class="absolute top-0 right-0 mt-3 mr-3 icon-size-7 text-primary"
+                            [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
+                    </ng-container>
+                    <div class="font-semibold">{{plan.label}}</div>
+                    <div class="mt-1 whitespace-normal text-secondary">{{plan.details}}</div>
+                    <div class="flex-auto"></div>
+                    <div class="mt-8 text-lg">
+                        <span>{{plan.price | currency:'EUR':'symbol':'1.0'}}</span>
+                        <span class="text-secondary"> / {{plan.type | titlecase}}</span>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+
+        <!-- Divider -->
+        <div class="mt-12 mb-10 border-t"></div>
+
+        <!-- Section -->
+        <div class="w-full">
+            <div class="text-xl">Payment Details</div>
+            <div class="text-secondary">Update your billing information. Make sure to set your location correctly as it
+                could affect your tax rates.</div>
+        </div>
+        <!-- <div class="grid grid-cols-4 gap-6 w-full mt-8">
+            Card holder
+            <div class="col-span-4">
+                <mat-form-field class="w-full" subscriptSizing="'dynamic'">
+                    <mat-label>Card holder</mat-label>
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
+                    <input [formControlName]="'cardHolder'" matInput>
+                </mat-form-field>
+            </div>
+            Card number
+            <div class="col-span-4 sm:col-span-2">
+                <mat-form-field class="w-full" subscriptSizing="'dynamic'">
+                    <mat-label>Card number</mat-label>
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:credit-card'" matPrefix></mat-icon>
+                    <input [formControlName]="'cardNumber'" matInput>
+                </mat-form-field>
+            </div>
+            Card expiration
+            <div class="col-span-2 sm:col-span-1">
+                <mat-form-field class="w-full" subscriptSizing="'dynamic'">
+                    <mat-label>Expiration date</mat-label>
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:calendar'" matPrefix></mat-icon>
+                    <input [formControlName]="'cardExpiration'" [placeholder]="'MM / YY'" matInput>
+                </mat-form-field>
+            </div>
+            Card CVC
+            <div class="col-span-2 sm:col-span-1">
+                <mat-form-field class="w-full" subscriptSizing="'dynamic'">
+                    <mat-label>CVC / CVC2</mat-label>
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:lock-closed'" matPrefix></mat-icon>
+                    <input [formControlName]="'cardCVC'" matInput>
+                </mat-form-field>
+            </div>
+            Country
+            <div class="col-span-4 sm:col-span-2">
+                <mat-form-field class="w-full" subscriptSizing="'dynamic'">
+                    <mat-label>Country</mat-label>
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:location-marker'" matPrefix></mat-icon>
+                    <mat-select [formControlName]="'country'">
+                        <mat-option [value]="'usa'">United States</mat-option>
+                        <mat-option [value]="'canada'">Canada</mat-option>
+                        <mat-option [value]="'mexico'">Mexico</mat-option>
+                        <mat-option [value]="'france'">France</mat-option>
+                        <mat-option [value]="'germany'">Germany</mat-option>
+                        <mat-option [value]="'italy'">Italy</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            ZIP
+            <div class="col-span-4 sm:col-span-2">
+                <mat-form-field class="w-full" subscriptSizing="'dynamic'">
+                    <mat-label>ZIP / Postal code</mat-label>
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:hashtag'" matPrefix></mat-icon>
+                    <input matInput>
+                </mat-form-field>
+            </div>
+        </div> -->
+        <div class="grid grid-cols-2 gap-5">
+            <div class="w-full">
+                <mat-form-field class="w-full" subscriptSizing="'dynamic'">
+                    <mat-label>Name</mat-label>
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
+                    <input [formControlName]="'name'" matInput>
+                </mat-form-field>
+            </div>
+            <div class="w-full">
+                <mat-form-field class="w-full" subscriptSizing="'dynamic'">
+                    <mat-label>Adress</mat-label>
+                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:location-marker'" matPrefix></mat-icon>
+                    <textarea [formControlName]="'address'" matInput></textarea>
+                </mat-form-field>
+            </div>
+            <div class="w-full  col-span-2">
+                <mat-form-field class="w-full" subscriptSizing="'dynamic'">
+                    <mat-label> International Bank Account Number(IBAN)</mat-label>
+                    <mat-icon class="icon-size-5" [svgIcon]="'mat_solid:comment_bank'" matPrefix></mat-icon>
+                    <input [formControlName]="'IBAN_No'" placeholder="Ex. DE89 3704 0044 0532 0130 00" type="number"
+                        matInput>
+                </mat-form-field>
+            </div>
+            <div class="w-full">
+                <mat-form-field class="w-full" subscriptSizing="'dynamic'">
+                    <mat-label> Bank Identifier Code(BIC)</mat-label>
+                    <mat-icon class="icon-size-5" [svgIcon]="'mat_solid:comment_bank'" matPrefix></mat-icon>
+                    <input [formControlName]="'bankIdentifierCode'" matInput>
+                </mat-form-field>
+            </div>
+            <div class="w-full inline-grid">
+                <mat-label>Signature</mat-label>
+                <label class="block">
+                    <span class="sr-only">Choose Signature</span>
+                    <input type="file" class="block w-full text-sm text-slate-500
+                      file:mr-4 file:py-2 file:px-4
+                      file:rounded-full file:border-0
+                      file:text-sm file:font-semibold
+                      file:bg-sky-50 file:text-sky-700
+                      hover:file:bg-sky-100 cursor-pointer
+                    " [formControlName]="'signature'" />
+                </label>
+            </div>
+        </div>
+        <!-- Divider -->
+        <div class="mt-11 mb-10 border-t"></div>
+
+        <!-- Actions -->
+        <div class="flex items-center justify-end">
+            <button mat-stroked-button type="button">
+                Cancel
+            </button>
+            <button class="ml-4" mat-flat-button type="submit" [color]="'primary'">Save
+            </button>
+        </div>
+    </form>
+
+</div>

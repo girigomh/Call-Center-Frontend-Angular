@@ -1,0 +1,190 @@
+<h2 mat-dialog-title>Add Customer</h2>
+<mat-dialog-content class="mat-typography overflow-x-hidden">
+    <form class="mt-8 flex flex-wrap gap-x-10" [formGroup]="customerForm" #signUpNgForm="ngForm">
+        <!-- First Name field -->
+        <mat-form-field class="w-50 flex-auto">
+            <mat-label><ng-container i18n="@@signup.first.name">first name</ng-container></mat-label>
+            <input id="first-name" matInput [formControlName]="'firstName'" /><mat-icon>account_circle</mat-icon>
+            <mat-error *ngIf="customerForm.get('firstName').hasError('required')">
+                <ng-container i18n="@@signup.first.name.required">first name</ng-container>
+            </mat-error>
+        </mat-form-field>
+        <!-- Last Name field -->
+        <mat-form-field class="w-50 flex-auto">
+            <mat-label><ng-container i18n="@@signup.last.name">last name</ng-container></mat-label>
+            <input id="last-name" matInput [formControlName]="'lastName'" /><mat-icon>account_circle</mat-icon>
+            <mat-error *ngIf="customerForm.get('lastName').hasError('required')">
+                <ng-container i18n="@@signup.last.name.required">last name required</ng-container>
+            </mat-error>
+        </mat-form-field>
+        <!-- Birthday field -->
+        <mat-form-field class="w-50 flex-auto">
+            <mat-label><ng-container i18n="@@birthday">Birthday</ng-container></mat-label>
+            <input id="Birthday-confirm" matInput [matDatepicker]="picker" [max]="today"
+                [formControlName]="'birthday'" />
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="customerForm.get('birthday').hasError('required')">
+                <ng-container i18n="@@birthday.required">Birthday required</ng-container>
+            </mat-error>
+            <mat-error *ngIf="customerForm.get('birthday').hasError('birthday')">
+                Bitte geben Sie ein gültiges Geburtsdatum ein
+            </mat-error>
+        </mat-form-field>
+        <!-- Email Filed -->
+        <mat-form-field class="w-50 flex-auto">
+            <mat-label><ng-container i18n="@@signup.email">email</ng-container></mat-label>
+            <input id="email" type="email" matInput [formControlName]="'emails'" /><mat-icon></mat-icon>
+            <mat-error *ngIf="customerForm.get('emails').hasError('required')">
+                <ng-container i18n="@@signup.email.required">email required</ng-container>
+            </mat-error>
+            <mat-error *ngIf="customerForm.get('emails').hasError('emails')">
+                Bitte geben Sie eine gültige E-Mail-Adresse ein
+            </mat-error>
+        </mat-form-field>
+        <!-- password field -->
+        <mat-form-field class="w-50 flex-auto">
+            <mat-label><ng-container i18n="@@signup.password">password</ng-container></mat-label>
+            <input id="password" matInput type="password" [formControlName]="'password'" #passwordField />
+            <button mat-icon-button type="button" (click)="
+                    passwordField.type === 'password'
+                        ? (passwordField.type = 'text')
+                        : (passwordField.type = 'password')
+                " matSuffix>
+                <mat-icon class="icon-size-5" *ngIf="passwordField.type === 'password'"
+                    [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                <mat-icon class="icon-size-5" *ngIf="passwordField.type === 'text'"
+                    [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
+            </button>
+            <mat-error> Passwort ist erforderlich </mat-error>
+        </mat-form-field>
+        <!-- Street field -->
+
+        <!-- Company Street field -->
+
+        <mat-form-field class="w-50 flex-auto">
+            <mat-label><ng-container i18n="@@street">Street</ng-container></mat-label>
+            <input id="Street-confirm" matInput [formControlName]="'street'" />
+            <mat-error *ngIf="customerForm.get('street').hasError('required')">
+                <ng-container i18n="@@street.required"> Street required</ng-container>
+            </mat-error>
+            <mat-error *ngIf="customerForm.get('street').hasError('street')">
+                Bitte geben Sie eine gültige Straße ein
+            </mat-error>
+        </mat-form-field>
+        <!-- House Number field -->
+        <mat-form-field class="w-50 flex-auto">
+            <mat-label><ng-container i18n="@@house.number">Number</ng-container></mat-label>
+            <input id="house-number-confirm" matInput type="number" [formControlName]="'houseNo'" />
+            <mat-error *ngIf="customerForm.get('houseNo').hasError('required')">
+                <ng-container i18n="@@house.number.required">number required</ng-container>
+            </mat-error>
+            <mat-error *ngIf="customerForm.get('houseNo').hasError('houseNo')">
+                Bitte geben Sie eine gültige Hausnummer ein
+            </mat-error>
+        </mat-form-field>
+        <!-- city field -->
+        <!-- <mat-form-field class="w-50 flex-auto">
+            <mat-label><ng-container>City</ng-container></mat-label>
+            <input id="house-number-confirm" matInput type="text" [formControlName]="'city'" />
+            <mat-error *ngIf="customerForm.get('city').hasError('required')">
+                <ng-container>city is required</ng-container>
+            </mat-error>
+        </mat-form-field> -->
+        <!-- Zip field -->
+        <mat-form-field class="w-50 flex-auto">
+            <mat-label><ng-container>Zip</ng-container></mat-label>
+            <input id="zip-confirm" matInput type="number" [formControlName]="'zip'" />
+            <mat-error *ngIf="customerForm.get('zip').hasError('required')">
+                <ng-container>zip required</ng-container>
+            </mat-error>
+            <mat-error *ngIf="customerForm.get('zip').hasError('zip')">
+                Bitte geben Sie eine gültige Postleitzahl ein
+            </mat-error>
+        </mat-form-field>
+        <!-- Location field -->
+        <mat-form-field class="w-50 flex-auto">
+            <mat-label><ng-container>Location</ng-container></mat-label>
+            <input id="location-confirm" matInput [formControlName]="'location'" /><mat-icon>
+                location_on</mat-icon>
+            <mat-error *ngIf="customerForm.get('location').hasError('required')">
+                <ng-container>Location required</ng-container>
+            </mat-error>
+            <mat-error *ngIf="customerForm.get('location').hasError('location')">
+                Bitte geben Sie eine gültige Ort ein
+            </mat-error>
+        </mat-form-field>
+        <!-- Country field -->
+        <mat-form-field class="w-50 flex-auto">
+            <mat-label><ng-container i18n="@@country"> Country</ng-container></mat-label>
+            <mat-select [formControlName]="'country'" #country placeholder="Country" name="country"
+                (ngModelChange)="getCountryName($event)">
+                <mat-option *ngFor="let country of countryValue" [value]="country.CountryName">
+                    {{ country.CountryName }}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="customerForm.get('country').hasError('required')">
+                <ng-container i18n="@@country.required">Country required</ng-container>
+            </mat-error>
+            <mat-error *ngIf="customerForm.get('country').hasError('country')">
+                Bitte geben Sie ein gültiges Land ein
+            </mat-error>
+        </mat-form-field>
+        <!-- state field -->
+        <mat-form-field class="w-50 flex-auto">
+            <mat-label><ng-container i18n="@@state">state</ng-container></mat-label>
+            <mat-select [formControlName]="'state'" #state placeholder="{{placeholder.state}}" name="state">
+                <mat-option *ngFor="let state of states" [value]="state">
+                    {{ state }}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="customerForm.get('state').hasError('required')">
+                <ng-container i18n="@@state.required">State required</ng-container>
+            </mat-error>
+            <mat-error *ngIf="customerForm.get('state').hasError('state')">
+                Bitte geben Sie einen gültigen Status ein
+            </mat-error>
+        </mat-form-field>
+        <!-- Phone No field -->
+        <mat-form-field class="w-50 flex-auto">
+            <mat-label><ng-container i18n="@@phonenumber">phone</ng-container></mat-label>
+            <input id="phone-number-confirm" type="tel" matInput [formControlName]="'phoneNo'" /><mat-icon>
+                phone</mat-icon>
+            <mat-error *ngIf="customerForm.get('phoneNo').hasError('required')">
+                <ng-container i18n="@@phonenumber.required">phone required</ng-container>
+            </mat-error>
+            <mat-error *ngIf="customerForm.get('phoneNo').hasError('phoneNo')">
+                Bitte geben Sie eine gültige Telefonnummer ein
+            </mat-error>
+        </mat-form-field>
+        <!-- Gender Filed -->
+        <div class="w-50 flex-auto">
+            <h3 class="font-semibold">Gender :*</h3>
+            <mat-radio-group aria-label="Select an option" [formControlName]="'gender'">
+                <mat-radio-button value="male">Male</mat-radio-button>
+                <mat-radio-button value="female" class="ml-1">Female</mat-radio-button>
+            </mat-radio-group>
+            <mat-error *ngIf="!customerForm.get('gender').untouched && customerForm.get('gender').hasError('required')">
+                <ng-container>gender is required</ng-container>
+            </mat-error>
+        </div>
+        <!-- Profile Picture field -->
+        <div class="w-50 flex-auto">
+            <label for="profilePic" class="d-block">Profile Picture</label>
+            <input type="file" formControlName="profilePhoto" id="profilePic" accept="image/*" name="profilePic">
+        </div>
+        <!-- PDF Field -->
+        <div class="w-50 flex-auto">
+            <label for="dataFile" class="d-block">PDFs</label>
+            <input type="file"
+                accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                formControlName="pdfs" id="pdfs" name="pdfs">
+        </div>
+        <br />
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-button [mat-dialog-close]="customerForm.value" [disabled]="customerForm.invalid"
+        cdkFocusInitial>Add</button>
+</mat-dialog-actions>

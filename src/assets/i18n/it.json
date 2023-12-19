@@ -1,0 +1,19 @@
+{
+    "userType": "Test",
+    "Files": "Dateien",
+	  "Calls": "Anrufe",
+	  "Notification": "Benachrichtigung",
+	  "Calendar": "Kalender",
+	  "Promotional Video": "Promotional Video",
+	  "User": "Benutzer",
+	  "Logout": "Abmelden",
+    "ADMIN": "Admin",
+    "Guten Tag": "Guten Tag",
+    "CAPTIONER": "Captioner",
+	"COMMUNICATIONASSISTENCE": "Communications Assistence",
+	"COMPANYLEADER": "Company Leader",
+	"COMPANYEMPLOYEE": "Company Employee",
+	"SWITCHINGCENTERLEADER": "Switching Center Leader",
+	"SWITCHINGCENTEMPLOYEE": "Switching Center Employee",
+	"ANONYMOUS": "Anonymous"
+}

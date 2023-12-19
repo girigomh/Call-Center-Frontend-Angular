@@ -1,0 +1,167 @@
+<div>
+    <form [formGroup]="videoCallForm">
+        <div *ngIf="userType === 'CUSTOMER' ||'ADMIN'">
+            <!-- <div class="flex items-center justify-between mt-4 py-3">
+                <div class="flex-auto leading-6 cursor-pointer" (click)="comments.toggle()">
+                
+                    Darf einer mich anrufen?
+                </div>
+                <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'comments'" #comments>
+                </mat-slide-toggle>
+            </div> -->
+            <!-- <div class="flex items-center justify-between mt-4 py-3">
+                <div class="flex-auto leading-6 cursor-pointer" (click)="comments.toggle()">
+                  
+                    Möchte ich bei eingehenden Anrufen benachrichtigt werden?
+                </div>
+                <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'comments'" #comments>
+                </mat-slide-toggle>
+            </div>
+            <div class="flex items-center justify-between mt-4 py-3">
+                <div class="flex-auto leading-6 cursor-pointer" (click)="comments.toggle()">
+                  
+                    Soll ich Anrufe aufzeichnen?
+                </div>
+                <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'comments'" #comments>
+                </mat-slide-toggle>
+            </div> -->
+        </div>
+        <div *ngIf="userType === 'COMPANYLEADER' ||'ADMIN'">
+            <div class="py-3">Wer darf mich anrufen?</div>
+            <div class="flex items-center justify-between">
+                <!-- <div class="flex-auto leading-6">
+                                            - Auswahl treffen:
+                                        </div> -->
+                <select class=" bg-gray-200 py-2 rounded-lg" [formControlName]="'comments'">
+                    <option value="all">Alle</option>
+                    <option value="verified">Oder nur die verifizierten</option>
+                    <option value="verified">Nur die registrierten</option>
+                </select>
+            </div>
+            <div class="my-6 border-t"></div>
+            <div class="flex items-center justify-between mt-4 py-3">
+                <div class="flex-auto leading-6 cursor-pointer" (click)="comments.toggle()">
+                    Soll ich Anrufe an andere Mitarbeiter weiterleiten, wenn ich nicht verfügbar bin?
+                </div>
+                <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'comments'" #comments>
+                </mat-slide-toggle>
+            </div>
+
+            <!-- <div class="flex items-center justify-between py-3">
+                <div class="flex-auto leading-6 cursor-pointer" (click)="comments.toggle()">
+                    Soll ich Anrufe aufzeichnen?
+                </div>
+                <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'comments'" #comments>
+                </mat-slide-toggle>
+            </div> -->
+            <div class="flex items-center justify-between">
+                <div class="flex-auto leading-6 cursor-pointer" (click)="comments.toggle()">
+                    Wie lange dürfen Anrufe maximal dauern?
+                </div>
+                <select class=" bg-gray-200 py-2 rounded-lg" [formControlName]="'comments'">
+                    <option value="5-10">5 - 10 min</option>
+                    <option value="10-20">10 - 20 min</option>
+                    <option value="20-30">20 - 30 min</option>
+                    <option value="30-45">30 - 45 min</option>
+                    <option value="45-60">45 - 60 min</option>
+                </select>
+
+            </div>
+            <!-- <div class="flex items-center justify-between py-3">
+                <div class="flex-auto leading-6 cursor-pointer" (click)="comments.toggle()">
+                   
+                    Soll ich Anrufer in einer Warteschlange halten, wenn alle Mitarbeiter besetzt sind?
+                </div>
+                <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'comments'" #comments>
+                </mat-slide-toggle>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <div class="flex-auto leading-6 cursor-pointer" (click)="comments.toggle()">
+                   
+                    Soll ich automatisierte Anrufbeantworter aktivieren, wenn ich nicht verfügbar bin?
+                </div>
+                <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'comments'" #comments>
+                </mat-slide-toggle>
+            </div> -->
+            <div class="flex items-center justify-between py-3">
+                <div class="flex-auto leading-6 cursor-pointer" (click)="comments.toggle()">
+                    Soll ich Kollegen erlauben, Anrufe an andere Kollegen weiterzuleiten oder nur ich selbst bin dazu
+                    berechtigt?
+                </div>
+                <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'comments'" #comments>
+                </mat-slide-toggle>
+            </div>
+            <!-- <div class="flex items-center justify-between">
+                <div class="flex-auto leading-6 cursor-pointer" (click)="comments.toggle()">
+                    
+                    Sollen Anrufe automatisch an andere Kollegen weitergeleitet werden, wenn ich bereits in einem
+                    Gespräch
+                    bin oder nicht
+                    verfügbar bin?
+                </div>
+                <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'comments'" #comments>
+                </mat-slide-toggle>
+            </div> -->
+
+            <div class="flex items-center justify-between py-3">
+                <div class="flex-auto leading-6 cursor-pointer" (click)="comments.toggle()">
+
+                    Sollen alle Anrufe automatisch an andere Kollegen weitergeleitet werden?
+                </div>
+                <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'comments'" #comments>
+                </mat-slide-toggle>
+            </div>
+        </div>
+        <div class="my-6 border-t"></div>
+
+        <div class="mt-4 py-3">Wie möchte ich benachrichtigt werden, wenn ein Anruf eingeht?</div>
+        <div class="flex items-center justify-between">
+
+            <select class=" bg-gray-200 py-2 rounded-lg" [formControlName]="'comments'">
+                <option value="all">Klingelton</option>
+                <option value="verified">Vibration</option>
+                <option value="verified">Stummschaltung</option>
+            </select>
+        </div>
+        <div class="my-6 border-t"></div>
+        <!-- <div class="mt-4">
+            <div class="w-full text-xl mt-8">Öffnungszeiten</div>
+            <mat-select placeholder="Opening hours" formControlName="comments" multiple>
+                <mat-option *ngFor="let timeOption of openingHoursOptions" [value]="timeOption">{{
+                    timeOption
+                    }}</mat-option>
+            </mat-select>
+        </div> -->
+        <!-- <div class="my-6 border-t"></div>
+        <div class="w-full text-xl mt-8">Videoqualität:</div>
+        <div class="flex items-center justify-between py-3">
+            <div class="flex-auto leading-6 cursor-pointer" (click)="comments.toggle()">
+                <div class="leading-6 font-medium">Videoqualität:</div>
+                Der Benutzer kann die Videoqualität für Videoanrufe einstellen, z.B. HD, SD oder automatisch
+            </div>
+            <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'comments'" #comments>
+            </mat-slide-toggle>
+        </div>
+        <div class="flex items-center justify-between py-3">
+            <div class="flex-auto leading-6 cursor-pointer" (click)="comments.toggle()">
+                <div class="leading-6 font-medium">Audioqualität:</div>
+                Der Benutzer kann die Audioqualität für Anrufe einstellen, z.B. hohe Qualität oder Standard.
+            </div>
+            <mat-slide-toggle class="ml-2" color="'primary'" [formControlName]="'comments'" #comments>
+            </mat-slide-toggle>
+        </div> -->
+
+        <!-- Divider -->
+        <div class="my-10 border-t"></div>
+
+        <!-- Actions -->
+        <div class="flex items-center justify-end">
+            <button mat-stroked-button type="button">
+                Abbrechen
+            </button>
+            <button class="ml-4" mat-flat-button type="button" color="'primary'">Speichern
+            </button>
+        </div>
+    </form>
+</div>

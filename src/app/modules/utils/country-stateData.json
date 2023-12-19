@@ -1,0 +1,69 @@
+{
+    "Countries": [
+        {
+            "CountryName": "Österreich",
+            "States": [
+                "Vorarlberg",
+                "Tirol",
+                "Salzburg",
+                "Kärnten",
+                "Steiermark",
+                "Oberösterreich",
+                "Niederösterreich",
+                "Burgenland",
+                "Wien"
+            ]
+        },
+        {
+            "CountryName": "Deutschland",
+            "States": [
+                "Baden-Württemberg",
+                "Bayern",
+                "Berlin",
+                "Brandenburg",
+                "Bremen",
+                "Hamburg",
+                "Hessen",
+                "Mecklenburg-Vorpommern",
+                "Niedersachsen",
+                "Nordrhein-Westfalen",
+                "Rheinland-Pfalz",
+                "Saarland",
+                "Sachsen",
+                "Sachsen-Anhalt",
+                "Schleswig-Holstein",
+                "Thüringen"
+            ]
+        },
+        {
+            "CountryName": "Schweiz ",
+            "States": [
+                "Zürich",
+                "Bern",
+                "Luzern",
+                "Uri",
+                "Schwyz",
+                "Obwalden",
+                "Nidwalden",
+                "Glarus",
+                "Zug",
+                "Freiburg",
+                "Solothurn",
+                "Basel",
+                "Schaffhausen",
+                "Appenzell Ausserrhoden",
+                "Appenzell Innerrhoden",
+                "St. Gallen",
+                "Graubünden",
+                "Aargau",
+                "Thurgau",
+                "Tessin",
+                "Waadt",
+                "Wallis",
+                "Neuenburg",
+                "Genf",
+                "Jura"
+            ]
+        }
+    ]
+}

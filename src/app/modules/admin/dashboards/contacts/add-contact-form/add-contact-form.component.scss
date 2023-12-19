@@ -1,0 +1,11 @@
+.done {
+  width: 150px;
+  height: 150px;
+  font-size: 150px;
+  color: green;
+}
+.custome_category > ::ng-deep .mat-option-text{
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
